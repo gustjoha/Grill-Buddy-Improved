@@ -13,7 +13,7 @@ import { exportPath, getPath, Path } from "./common/navigation";
 
 @customElement("grill-buddy")
 export class GrillBuddyPanel extends LitElement {
-  @property() public hass!: HomeAssistant;
+  @property({ attribute: false }) public hass!: HomeAssistant;
   @property({ type: Boolean, reflect: true }) public narrow!: boolean;
 
   async firstUpdated() {
@@ -41,19 +41,19 @@ export class GrillBuddyPanel extends LitElement {
           <div class="version">${VERSION}</div>
         </div>
 
-        <ha-tabs
+        <sl-tab-group
           scrollable
           attr-for-selected="page-name"
           .selected=${path.page}
-          @iron-activate=${this.handlePageSelected}
+          @sl-tab-show=${this.handlePageSelected}
         >
-          <paper-tab page-name="probes">
+          <sl-tab slot="nav" panel="probes" .active=${path.page === "probes"}>
             ${localize("panels.probes.title", this.hass.language)}
-          </paper-tab>
-          <paper-tab page-name="help"
-            >${localize("panels.help.title", this.hass.language)}</paper-tab
+          </sl-tab>
+          <sl-tab slot="nav" panel="help" .active=${path.page === "help"}
+            >${localize("panels.help.title", this.hass.language)}</sl-tab
           >
-        </ha-tabs>
+        </sl-tab-group>
       </div>
       <div class="view">${this.getView(path)}</div>
     `;
@@ -142,8 +142,9 @@ export class GrillBuddyPanel extends LitElement {
     }
   }
 
-  handlePageSelected(ev) {
-    const newPage = ev.detail.item.getAttribute("page-name");
+  handlePageSelected(ev:CustomEvent) {
+    //const newPage = ev.detail.item.getAttribute("page-name");
+    const newPage = ev.detail.name;
     //this was newPage !== getPath() but I am pretty sure that is a bug.
     if (newPage !== getPath().page) {
       navigate(this, exportPath(newPage));
@@ -178,13 +179,12 @@ export class GrillBuddyPanel extends LitElement {
         line-height: 20px;
         flex-grow: 1;
       }
-      ha-tabs {
+      sl-tab-group {
         margin-left: max(env(safe-area-inset-left), 24px);
         margin-right: max(env(safe-area-inset-right), 24px);
-        --paper-tabs-selection-bar-color: var(
-          --app-header-selection-bar-color,
-          var(--app-header-text-color, #fff)
-        );
+        --ha-tab-active-text-color: var(--app-header-text-color, white);
+        --ha-tab-indicator-color: var(--app-header-text-color, white);
+        --ha-tab-track-color: transparent;
         text-transform: uppercase;
       }
 

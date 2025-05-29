@@ -48,7 +48,7 @@ function fe(e,t){return(({finisher:e,descriptor:t})=>(r,i)=>{var s;if(void 0===i
      * @license
      * Copyright 2021 Google LLC
      * SPDX-License-Identifier: BSD-3-Clause
-     */var be,ge,_e;null===(be=window.HTMLSlotElement)||void 0===be||be.prototype.assignedElements,function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none"}(ge||(ge={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24"}(_e||(_e={}));var ve=function(e,t,r,i){i=i||{},r=null==r?{}:r;var s=new Event(t,{bubbles:void 0===i.bubbles||i.bubbles,cancelable:Boolean(i.cancelable),composed:void 0===i.composed||i.composed});return s.detail=r,e.dispatchEvent(s),s};const ye=async()=>{if(customElements.get("ha-checkbox")&&customElements.get("ha-slider"))return;await customElements.whenDefined("partial-panel-resolver");const e=document.createElement("partial-panel-resolver");e.hass={panels:[{url_path:"tmp",component_name:"config"}]},e._updateRoutes(),await e.routerOptions.routes.tmp.load(),await customElements.whenDefined("ha-panel-config");const t=document.createElement("ha-panel-config");await t.routerOptions.routes.automation.load()},Ee="grill_buddy",Ae="probe_name",we="probe_source",He="probe_preset",$e="probe_lower_bound",Te="probe_upper_bound",Se="probe_state_update_setting",Be="probe_source_type",Pe="source_type_preset",Le="probe_target_temperature",Oe="metric",Ce=e=>e.callWS({type:Ee+"/config"}),Ne=e=>{class t extends e{connectedCallback(){super.connectedCallback(),this.__checkSubscribed()}disconnectedCallback(){if(super.disconnectedCallback(),this.__unsubs){for(;this.__unsubs.length;){const e=this.__unsubs.pop();e instanceof Promise?e.then((e=>e())):e()}this.__unsubs=void 0}}updated(e){super.updated(e),e.has("hass")&&this.__checkSubscribed()}hassSubscribe(){return[]}__checkSubscribed(){void 0===this.__unsubs&&this.isConnected&&void 0!==this.hass&&(this.__unsubs=this.hassSubscribe())}}return s([me({attribute:!1})],t.prototype,"hass",void 0),t};function Ie(e,t){!function(e,t){const r=e;ve(r,"show-dialog",{dialogTag:"error-dialog",dialogImport:()=>Promise.resolve().then((function(){return Ur})),dialogParams:{error:t}})}(t,F`
+     */var be,ge,_e;null===(be=window.HTMLSlotElement)||void 0===be||be.prototype.assignedElements,function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none"}(ge||(ge={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24"}(_e||(_e={}));var ve=function(e,t,r,i){i=i||{},r=null==r?{}:r;var s=new Event(t,{bubbles:void 0===i.bubbles||i.bubbles,cancelable:Boolean(i.cancelable),composed:void 0===i.composed||i.composed});return s.detail=r,e.dispatchEvent(s),s};const ye=async()=>{if(customElements.get("ha-checkbox")&&customElements.get("ha-slider")&&customElements.get("ha-panel-config"))return;await customElements.whenDefined("partial-panel-resolver");const e=document.createElement("partial-panel-resolver");e.hass={panels:[{url_path:"tmp",component_name:"config"}]},e._updateRoutes(),await e.routerOptions.routes.tmp.load(),await customElements.whenDefined("ha-panel-config");const t=document.createElement("ha-panel-config");await t.routerOptions.routes.automation.load()},Ee="grill_buddy",Ae="probe_name",we="probe_source",He="probe_preset",$e="probe_lower_bound",Te="probe_upper_bound",Se="probe_state_update_setting",Be="probe_source_type",Pe="source_type_preset",Le="probe_target_temperature",Oe="metric",Ce=e=>e.callWS({type:Ee+"/config"}),Ne=e=>{class t extends e{connectedCallback(){super.connectedCallback(),this.__checkSubscribed()}disconnectedCallback(){if(super.disconnectedCallback(),this.__unsubs){for(;this.__unsubs.length;){const e=this.__unsubs.pop();e instanceof Promise?e.then((e=>e())):e()}this.__unsubs=void 0}}updated(e){super.updated(e),e.has("hass")&&this.__checkSubscribed()}hassSubscribe(){return[]}__checkSubscribed(){void 0===this.__unsubs&&this.isConnected&&void 0!==this.hass&&(this.__unsubs=this.hassSubscribe())}}return s([me({attribute:!1})],t.prototype,"hass",void 0),t};function Ie(e,t){!function(e,t){const r=e;ve(r,"show-dialog",{dialogTag:"error-dialog",dialogImport:()=>Promise.resolve().then((function(){return Ur})),dialogParams:{error:t}})}(t,F`
     ${e.error}:${e.body.message?F` ${e.body.message} `:""}
   `)}function Re(e){return e.units==Oe?"°C":"°F"}const xe=c`
   ha-card {
@@ -405,22 +405,22 @@ const Ue=2;class ke{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
             .narrow=${this.narrow}
           ></ha-menu-button>
           <div class="main-title">${Ir("title",this.hass.language)}</div>
-          <div class="version">${"v2025.4.1"}</div>
+          <div class="version">${"v2025.5.0"}</div>
         </div>
 
-        <ha-tabs
+        <sl-tab-group
           scrollable
           attr-for-selected="page-name"
           .selected=${e.page}
-          @iron-activate=${this.handlePageSelected}
+          @sl-tab-show=${this.handlePageSelected}
         >
-          <paper-tab page-name="probes">
+          <sl-tab slot="nav" panel="probes" .active=${"probes"===e.page}>
             ${Ir("panels.probes.title",this.hass.language)}
-          </paper-tab>
-          <paper-tab page-name="help"
-            >${Ir("panels.help.title",this.hass.language)}</paper-tab
+          </sl-tab>
+          <sl-tab slot="nav" panel="help" .active=${"help"===e.page}
+            >${Ir("panels.help.title",this.hass.language)}</sl-tab
           >
-        </ha-tabs>
+        </sl-tab-group>
       </div>
       <div class="view">${this.getView(e)}</div>
     `}getView(e){switch(e.page){case"probes":return F`
@@ -455,7 +455,7 @@ const Ue=2;class ke{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
               page from the menu above to continue.
             </div>
           </ha-card>
-        `}}handlePageSelected(e){const t=e.detail.item.getAttribute("page-name");t!==xr().page?(!function(e,t,r){void 0===r&&(r=!1),r?history.replaceState(null,"",t):history.pushState(null,"",t),ve(window,"location-changed",{replace:r})}(0,((e,...t)=>{let r={page:e,params:{}};t.forEach((e=>{"string"==typeof e?r=Object.assign(Object.assign({},r),{subpage:e}):"params"in e?r=Object.assign(Object.assign({},r),{params:e.params}):"filter"in e&&(r=Object.assign(Object.assign({},r),{filter:e.filter}))}));const i=e=>{let t=Object.keys(e);t=t.filter((t=>e[t])),t.sort();let r="";return t.forEach((t=>{const i=e[t];r=r.length?`${r}/${t}/${i}`:`${t}/${i}`})),r};let s=`/${Ee}/${r.page}`;return r.subpage&&(s=`${s}/${r.subpage}`),i(r.params).length&&(s=`${s}/${i(r.params)}`),r.filter&&(s=`${s}/filter/${i(r.filter)}`),s})(t)),this.requestUpdate()):scrollTo(0,0)}static get styles(){return c`
+        `}}handlePageSelected(e){const t=e.detail.name;t!==xr().page?(!function(e,t,r){void 0===r&&(r=!1),r?history.replaceState(null,"",t):history.pushState(null,"",t),ve(window,"location-changed",{replace:r})}(0,((e,...t)=>{let r={page:e,params:{}};t.forEach((e=>{"string"==typeof e?r=Object.assign(Object.assign({},r),{subpage:e}):"params"in e?r=Object.assign(Object.assign({},r),{params:e.params}):"filter"in e&&(r=Object.assign(Object.assign({},r),{filter:e.filter}))}));const i=e=>{let t=Object.keys(e);t=t.filter((t=>e[t])),t.sort();let r="";return t.forEach((t=>{const i=e[t];r=r.length?`${r}/${t}/${i}`:`${t}/${i}`})),r};let s=`/${Ee}/${r.page}`;return r.subpage&&(s=`${s}/${r.subpage}`),i(r.params).length&&(s=`${s}/${i(r.params)}`),r.filter&&(s=`${s}/filter/${i(r.filter)}`),s})(t)),this.requestUpdate()):scrollTo(0,0)}static get styles(){return c`
       ${xe} :host {
         color: var(--primary-text-color);
         --paper-card-header-color: var(--primary-text-color);
@@ -479,13 +479,12 @@ const Ue=2;class ke{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
         line-height: 20px;
         flex-grow: 1;
       }
-      ha-tabs {
+      sl-tab-group {
         margin-left: max(env(safe-area-inset-left), 24px);
         margin-right: max(env(safe-area-inset-right), 24px);
-        --paper-tabs-selection-bar-color: var(
-          --app-header-selection-bar-color,
-          var(--app-header-text-color, #fff)
-        );
+        --ha-tab-active-text-color: var(--app-header-text-color, white);
+        --ha-tab-indicator-color: var(--app-header-text-color, white);
+        --ha-tab-track-color: transparent;
         text-transform: uppercase;
       }
 
@@ -509,7 +508,7 @@ const Ue=2;class ke{constructor(e){}get _$AU(){return this._$AM._$AU}_$AT(e,t,r)
         font-weight: 500;
         color: rgba(var(--rgb-text-primary-color), 0.9);
       }
-    `}},s([me()],e.GrillBuddyPanel.prototype,"hass",void 0),s([me({type:Boolean,reflect:!0})],e.GrillBuddyPanel.prototype,"narrow",void 0),e.GrillBuddyPanel=s([ce("grill-buddy")],e.GrillBuddyPanel);let Mr=class extends he{async showDialog(e){this._params=e,await this.updateComplete}async closeDialog(){this._params=void 0}render(){return this._params?F`
+    `}},s([me({attribute:!1})],e.GrillBuddyPanel.prototype,"hass",void 0),s([me({type:Boolean,reflect:!0})],e.GrillBuddyPanel.prototype,"narrow",void 0),e.GrillBuddyPanel=s([ce("grill-buddy")],e.GrillBuddyPanel);let Mr=class extends he{async showDialog(e){this._params=e,await this.updateComplete}async closeDialog(){this._params=void 0}render(){return this._params?F`
       <ha-dialog
         open
         .heading=${!0}
