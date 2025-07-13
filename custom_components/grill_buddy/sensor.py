@@ -182,7 +182,14 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
         )
 
     def async_watch_sensor_states(self):
-        """Watch both temperature sensor and input_number entity state changes."""
+        """Watch both temperature sensor and input_number entity state changes.
+        
+        Sets up state listeners for:
+        1. Temperature sensor: Monitors actual probe temperature changes
+        2. Input number entity: Monitors target temperature changes (when using input_number source)
+        
+        Performance: Properly cleans up existing listeners to prevent memory leaks.
+        """
         # Clean up existing listeners
         if self._state_listener:
             self._state_listener()
@@ -347,7 +354,17 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
     def async_input_number_state_changed(
         self, event: Event[EventStateChangedData]
     ) -> None:
-        """Callback fired when input_number entity state has changed."""
+        """Callback fired when input_number entity state has changed.
+        
+        Performance improvements implemented:
+        - Debouncing: Updates limited to once per second to prevent excessive HA updates
+        - Change detection: Only updates when value actually changes (≥0.1 difference)
+        - Unit conversion: Automatically handles F/C conversion for internal storage
+        - Error handling: Gracefully handles invalid input_number values
+        
+        Args:
+            event: State change event from Home Assistant
+        """
         # Performance improvement: debounce updates
         from datetime import datetime
         now = datetime.now()
