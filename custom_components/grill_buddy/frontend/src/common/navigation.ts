@@ -7,20 +7,32 @@ export interface Path {
   filter?: Record<string, string | undefined>;
 }
 
+// Performance: Cache for URL parsing to avoid repeated work
+let cachedPath: Path | null = null;
+let cachedPathname: string | null = null;
+
 export const getPath = () => {
+  const currentPathname = window.location.pathname;
+  
+  // Performance: Return cached result if pathname hasn't changed
+  if (cachedPathname === currentPathname && cachedPath) {
+    return cachedPath;
+  }
+
+  // Performance: Optimized pairsToDict function with reduced object spreading
   const pairsToDict = (pairs: string[]) => {
-    let res = {};
+    const res: Record<string, string | undefined> = {};
     for (let i = 0; i < pairs.length; i += 2) {
       const key = pairs[i];
-      const val = i < pairs.length ? pairs[i + 1] : undefined;
-      res = { ...res, [key]: val };
+      const val = i + 1 < pairs.length ? pairs[i + 1] : undefined;
+      res[key] = val;
     }
     return res;
   };
 
-  const parts = window.location.pathname.split("/");
+  const parts = currentPathname.split("/");
 
-  let path: Path = {
+  const path: Path = {
     page: parts[2] || "probes", //was "general", but since we don't have a general config page, defaulting to "probes"
     params: {},
   };
@@ -28,19 +40,23 @@ export const getPath = () => {
   if (parts.length > 3) {
     let extraArgs = parts.slice(3);
 
-    if (parts.includes("filter")) {
-      const n = extraArgs.findIndex((e) => e == "filter");
-      const filterParts = extraArgs.slice(n + 1);
-      extraArgs = extraArgs.slice(0, n);
-
-      path = { ...path, filter: pairsToDict(filterParts) };
+    const filterIndex = extraArgs.indexOf("filter");
+    if (filterIndex !== -1) {
+      const filterParts = extraArgs.slice(filterIndex + 1);
+      extraArgs = extraArgs.slice(0, filterIndex);
+      path.filter = pairsToDict(filterParts);
     }
 
     if (extraArgs.length) {
-      if (extraArgs.length % 2) path = { ...path, subpage: extraArgs.shift() };
-      if (extraArgs.length) path = { ...path, params: pairsToDict(extraArgs) };
+      if (extraArgs.length % 2) path.subpage = extraArgs.shift();
+      if (extraArgs.length) path.params = pairsToDict(extraArgs);
     }
   }
+  
+  // Performance: Cache the result
+  cachedPath = path;
+  cachedPathname = currentPathname;
+  
   return path;
 };
 
