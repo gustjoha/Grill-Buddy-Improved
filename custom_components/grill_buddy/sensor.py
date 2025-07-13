@@ -36,11 +36,13 @@ from .const import (
     PRESET_NAME,
     PRESET_TARGET_TEMPERATURE,
     PROBE_ID,
+    PROBE_INPUT_NUMBER_ENTITY,
     PROBE_LOWER_BOUND,
     PROBE_NAME,
     PROBE_PRESET,
     PROBE_SOURCE,
     PROBE_SOURCE_TYPE,
+    PROBE_SOURCE_TYPE_INPUT_NUMBER,
     PROBE_SOURCE_TYPE_PRESET,
     PROBE_SOURCE_TYPE_VALUE,
     PROBE_STATE_UPDATE_SETTING,
@@ -49,6 +51,7 @@ from .const import (
     PROBE_UPPER_BOUND,
     PROBES,
     SENSOR_ATTR_ID,
+    SENSOR_ATTR_INPUT_NUMBER_ENTITY,
     SENSOR_ATTR_SOURCE,
     SENSOR_ATTR_STATE_UPDATE_SETTING,
     SENSOR_ATTR_LOWER_BOUND,
@@ -109,6 +112,7 @@ async def async_setup_entry(
             lower_bound=config[PROBE_LOWER_BOUND],
             upper_bound=config[PROBE_UPPER_BOUND],
             state_update_setting=config[PROBE_STATE_UPDATE_SETTING],
+            input_number_entity=config[PROBE_INPUT_NUMBER_ENTITY],
         )
 
         hass.data[DOMAIN][PROBES][config[PROBE_ID]] = sensor_entity
@@ -135,6 +139,7 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
         lower_bound: float,
         upper_bound: float,
         state_update_setting: int,
+        input_number_entity: str,
     ) -> None:
         """Initialize the sensor entity."""
         self._hass = hass
@@ -144,7 +149,9 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
         self._id = id
         self._name = name
         self._source = source
+        self._input_number_entity = input_number_entity
         self._state_listener = None
+        self._input_number_listener = None
         self._preset = self._hass.data[DOMAIN][COORDINATOR].store.async_get_preset(
             preset
         )
@@ -166,20 +173,38 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
         ].store.async_get_state_update_setting(state_update_setting)
         self._time_to_target = None
         self._notification_sent = False
+        # Performance improvement: track last update time for debouncing
+        self._last_update_time = None
+        self._debounce_delay = timedelta(seconds=1)  # 1 second debounce
         self.async_watch_sensor_states()
         async_dispatcher_connect(
             hass, DOMAIN + "_config_updated", self.async_update_sensor_entity
         )
 
     def async_watch_sensor_states(self):
+        """Watch both temperature sensor and input_number entity state changes."""
+        # Clean up existing listeners
         if self._state_listener:
             self._state_listener()
+        if self._input_number_listener:
+            self._input_number_listener()
+            
+        # Set up temperature sensor listener
         if self._source:
             self._state_listener = async_track_state_change_event(
                 self._hass, self._source, self.async_sensor_state_changed
             )
         else:
             self._state_listener = None
+            
+        # Set up input_number listener if using input_number source type
+        if (self._source_type == PROBE_SOURCE_TYPE_INPUT_NUMBER 
+            and self._input_number_entity):
+            self._input_number_listener = async_track_state_change_event(
+                self._hass, self._input_number_entity, self.async_input_number_state_changed
+            )
+        else:
+            self._input_number_listener = None
 
     @callback
     def async_sensor_state_changed(
@@ -216,6 +241,25 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
                 and self._preset is not None
             ):
                 target_temperature = self._preset[PRESET_TARGET_TEMPERATURE]
+            elif self._source_type == PROBE_SOURCE_TYPE_INPUT_NUMBER:
+                # Get current target temperature from input_number entity
+                if self._input_number_entity:
+                    input_number_state = self._hass.states.get(self._input_number_entity)
+                    if input_number_state and input_number_state.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE):
+                        try:
+                            target_temperature = float(input_number_state.state)
+                            # Convert to Celsius if needed for internal calculations
+                            if not self._system_is_metric:
+                                target_temperature = convert_temperatures(
+                                    UnitOfTemperature.FAHRENHEIT,
+                                    UnitOfTemperature.CELSIUS,
+                                    target_temperature,
+                                )
+                            # Update our cached target temperature
+                            self._target_temperature = target_temperature
+                        except (ValueError, TypeError):
+                            # Invalid input_number value, use cached value or None
+                            target_temperature = self._target_temperature
             self._status = GOAL_NOT_REACHED
             if is_number(self._temperature) and is_number(target_temperature):
                 # handle state update settings here
@@ -299,6 +343,50 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
                         self._time_to_target = None
             self.async_schedule_update_ha_state()
 
+    @callback
+    def async_input_number_state_changed(
+        self, event: Event[EventStateChangedData]
+    ) -> None:
+        """Callback fired when input_number entity state has changed."""
+        # Performance improvement: debounce updates
+        from datetime import datetime
+        now = datetime.now()
+        if (self._last_update_time and 
+            (now - self._last_update_time) < self._debounce_delay):
+            return
+            
+        old_state_obj = event.data["old_state"]
+        new_state_obj = event.data["new_state"]
+        
+        if new_state_obj is None or new_state_obj.state in (STATE_UNKNOWN, STATE_UNAVAILABLE):
+            return
+            
+        try:
+            new_target = float(new_state_obj.state)
+            old_target = float(old_state_obj.state) if old_state_obj and old_state_obj.state not in (STATE_UNKNOWN, STATE_UNAVAILABLE) else None
+            
+            # Performance improvement: only update if value actually changed
+            if old_target is not None and abs(new_target - old_target) < 0.1:
+                return
+                
+            # Convert to Celsius if needed for internal storage
+            if not self._system_is_metric:
+                new_target = convert_temperatures(
+                    UnitOfTemperature.FAHRENHEIT,
+                    UnitOfTemperature.CELSIUS,
+                    new_target,
+                )
+            
+            # Update internal target temperature for input_number source type
+            if self._source_type == PROBE_SOURCE_TYPE_INPUT_NUMBER:
+                self._target_temperature = new_target
+                self._last_update_time = now
+                self.async_schedule_update_ha_state()
+                
+        except (ValueError, TypeError):
+            # Invalid input_number value, ignore
+            pass
+
     def get_lower_bound(self):
         if self._lower_bound:
             return self._lower_bound
@@ -332,6 +420,7 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
                 if self._upper_bound is None:
                     self._upper_bound = self._preset[PRESET_TARGET_TEMPERATURE]
             self._target_temperature = probe[PROBE_TARGET_TEMPERATURE]
+            self._input_number_entity = probe[PROBE_INPUT_NUMBER_ENTITY]
             self.async_watch_sensor_states()
             self.async_schedule_update_ha_state()
 
@@ -405,6 +494,11 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
             and self._target_temperature is not None
         ):
             target_temperature_attribute = f"{get_localized_temperature(self._target_temperature, self._system_is_metric)} {localized_temperature_unit}"
+        elif (
+            self._source_type == PROBE_SOURCE_TYPE_INPUT_NUMBER
+            and self._target_temperature is not None
+        ):
+            target_temperature_attribute = f"{get_localized_temperature(self._target_temperature, self._system_is_metric)} {localized_temperature_unit}"
         else:
             target_temperature_attribute = None
         if self._source_type == PROBE_SOURCE_TYPE_PRESET and self._preset is not None:
@@ -428,6 +522,7 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
             SENSOR_ATTR_LOWER_BOUND: f"{get_localized_temperature(self._lower_bound,self._system_is_metric)} {localized_temperature_unit}",
             SENSOR_ATTR_UPPER_BOUND: f"{get_localized_temperature(self._upper_bound,self._system_is_metric)} {localized_temperature_unit}",
             SENSOR_ATTR_STATE_UPDATE_SETTING: f"{sus_attribute}",
+            SENSOR_ATTR_INPUT_NUMBER_ENTITY: self._input_number_entity if self._source_type == PROBE_SOURCE_TYPE_INPUT_NUMBER else None,
             SENSOR_ATTR_TIME_TO_TARGET: self._time_to_target,
         }
 
@@ -443,6 +538,10 @@ class GrillBuddyProbeEntity(SensorEntity, RestoreEntity):
         _LOGGER.debug("{} is removed from hass".format(self.entity_id))
 
     def __dell__(self):
+        """Clean up listeners when entity is deleted."""
         if self._state_listener:
             self._state_listener()
             self._state_listener = None
+        if self._input_number_listener:
+            self._input_number_listener()
+            self._input_number_listener = None
