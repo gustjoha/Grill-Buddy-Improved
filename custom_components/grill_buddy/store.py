@@ -20,6 +20,7 @@ from .const import (
     PRESET_PROTEIN,
     PRESET_PROTEIN_ENUM,
     PRESET_TARGET_TEMPERATURE,
+    PROBE_INPUT_NUMBER_ENTITY,
     PROBE_LOWER_BOUND,
     PROBE_LOWER_BOUND_DEFAULT,
     PROBE_SOURCE_TYPE,
@@ -66,6 +67,7 @@ class ProbeEntry:
     )
     probe_source_type = attr.ib(type=str, default=PROBE_SOURCE_TYPE_VALUE)
     probe_target_temperature = attr.ib(type=float, default=None)
+    probe_input_number_entity = attr.ib(type=str, default=None)
 
 
 @attr.s(slots=True, frozen=True)
@@ -155,6 +157,9 @@ class GrillBuddyStorage:
                         ),
                         probe_target_temperature=probe.get(
                             PROBE_TARGET_TEMPERATURE, None
+                        ),
+                        probe_input_number_entity=probe.get(
+                            PROBE_INPUT_NUMBER_ENTITY, None
                         ),
                     )
             if PRESETS in data:

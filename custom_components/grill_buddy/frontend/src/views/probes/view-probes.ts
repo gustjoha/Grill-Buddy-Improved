@@ -12,6 +12,7 @@ import {
   saveProbe,
   fetchPresets,
   fetchStateUpdateSettings,
+  fetchAllInitialData,
 } from "../../data/websockets";
 import { mdiDelete } from "@mdi/js";
 import { SubscribeMixin } from "../../subscribe-mixin";
@@ -55,6 +56,10 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
   @property({ type: Array })
   private sensors: string[] = [];
 
+  // Performance: Cache for memoizing expensive render operations
+  private _renderCache = new Map<string, TemplateResult[]>();
+  private _lastProbesHash = '';
+
   @query("#nameInput")
   private nameInput!: HTMLInputElement;
 
@@ -71,7 +76,10 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
   }
 
   public hassSubscribe(): Promise<UnsubscribeFunc>[] {
-    this._fetchData();
+    // Only fetch data if not already loaded to prevent double-fetching
+    if (!this.config || !this.probes.length) {
+      this._fetchData();
+    }
     return [
       this.hass!.connection.subscribeMessage(() => this._fetchData(), {
         type: DOMAIN + "_config_updated",
@@ -79,14 +87,24 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
     ];
   }
 
+  // Performance: Batch all API calls in parallel instead of sequential
   private async _fetchData(): Promise<void> {
     if (!this.hass) {
       return;
     }
-    this.config = await fetchConfig(this.hass);
-    this.probes = await fetchProbes(this.hass);
-    this.presets = await fetchPresets(this.hass);
-    this.state_update_settings = await fetchStateUpdateSettings(this.hass);
+    
+    try {
+      // Performance: Use batched API call for initial data loading
+      const data = await fetchAllInitialData(this.hass);
+      
+      this.config = data.config;
+      this.probes = data.probes;
+      this.presets = data.presets;
+      this.state_update_settings = data.stateUpdateSettings;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // Graceful degradation - keep existing data if available
+    }
   }
 
   private handleAddProbe(): void {
@@ -99,6 +117,11 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
     };
 
     this.probes = [...this.probes, newProbe];
+    
+    // Performance: Clear render cache when probes change
+    this._renderCache.clear();
+    this._lastProbesHash = '';
+    
     this.saveToHA(newProbe);
   }
 
@@ -109,6 +132,11 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
     this.probes = Object.values(this.probes).map((probe, i) =>
       i === index ? updatedProbe : probe,
     );
+    
+    // Performance: Clear render cache when probes change
+    this._renderCache.clear();
+    this._lastProbesHash = '';
+    
     this.saveToHA(updatedProbe);
   }
 
@@ -121,6 +149,11 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
       return;
     }
     this.probes = this.probes.filter((_, i) => i !== index);
+    
+    // Performance: Clear render cache when probes change
+    this._renderCache.clear();
+    this._lastProbesHash = '';
+    
     if (!this.hass) {
       return;
     }
@@ -381,6 +414,36 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
     }
   }
 
+  // Performance: Helper to generate a hash for memoization
+  private _generateProbesHash(): string {
+    return JSON.stringify(this.probes.map(p => ({ 
+      id: p.probe_id, 
+      name: p.probe_name, 
+      source: p.probe_source,
+      source_type: p.probe_source_type,
+      preset: p.probe_preset,
+      target_temp: p.probe_target_temperature
+    })));
+  }
+
+  // Performance: Memoized probe rendering to avoid unnecessary re-renders
+  private _renderProbesMemoized(): TemplateResult[] {
+    const currentHash = this._generateProbesHash();
+    
+    if (currentHash === this._lastProbesHash && this._renderCache.has('probes')) {
+      return this._renderCache.get('probes') || [];
+    }
+    
+    const renderedProbes = Object.entries(this.probes).map(([key, value]) =>
+      this.renderProbe(value, parseInt(key))
+    );
+    
+    this._renderCache.set('probes', renderedProbes);
+    this._lastProbesHash = currentHash;
+    
+    return renderedProbes;
+  }
+
   render(): TemplateResult {
     if (!this.hass || !this.config) {
       return html``;
@@ -429,9 +492,7 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
             </div>
           </div>
         </ha-card>
-        ${Object.entries(this.probes).map(([key, value]) =>
-          this.renderProbe(value, parseInt(key)),
-        )}
+        ${this._renderProbesMemoized()}
       `;
     }
   }

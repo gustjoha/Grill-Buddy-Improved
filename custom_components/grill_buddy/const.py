@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-VERSION = "v2025.5.0"
+VERSION = "v2025.7.0"
 NAME = "Grill Buddy"
 MANUFACTURER = "@jeroenterheerdt"
 
@@ -55,7 +55,9 @@ PRESET_TARGET_TEMPERATURE = "preset_target_temperature"
 PRESET_ICON = "preset_icon"
 PROBE_SOURCE_TYPE_PRESET = "source_type_preset"
 PROBE_SOURCE_TYPE_VALUE = "source_type_value"
+PROBE_SOURCE_TYPE_INPUT_NUMBER = "source_type_input_number"
 PROBE_TARGET_TEMPERATURE = "probe_target_temperature"
+PROBE_INPUT_NUMBER_ENTITY = "probe_input_number_entity"
 
 # Defaults
 PROBE_UPPER_BOUND_DEFAULT = None
@@ -91,6 +93,7 @@ SENSOR_ATTR_STATE_UPDATE_SETTING = "Goal"
 SENSOR_ATTR_UPPER_BOUND = "Upper threshold"
 SENSOR_ATTR_LOWER_BOUND = "Lower threshold"
 SENSOR_ATTR_SOURCE_TYPE = "Get target temperature from"
+SENSOR_ATTR_INPUT_NUMBER_ENTITY = "Input number entity"
 SENSOR_ATTR_TIME_TO_TARGET = "Time to target (s)"
 
 # Conversion factors

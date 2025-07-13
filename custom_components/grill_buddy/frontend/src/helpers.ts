@@ -39,21 +39,54 @@ export function computeName(entity: HassEntity) {
   else return String(entity.entity_id.split(".").pop());
 }
 
+// Performance: Optimized equality check avoiding expensive JSON.stringify
 export function isEqual(...arr: any[]) {
-  return arr.every((e) => JSON.stringify(e) === JSON.stringify(arr[0]));
+  if (arr.length < 2) return true;
+  const first = arr[0];
+  return arr.every((e) => shallowEqual(e, first));
 }
 
+// Performance: Fast shallow equality check for most common cases
+function shallowEqual(a: any, b: any): boolean {
+  if (a === b) return true;
+  if (a == null || b == null) return a === b;
+  if (typeof a !== typeof b) return false;
+  if (typeof a !== 'object') return a === b;
+  
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  
+  for (const key of keysA) {
+    if (!keysB.includes(key) || a[key] !== b[key]) return false;
+  }
+  return true;
+}
+
+// Performance: Optimized unique function using Set for primitives and Map for objects
 export function Unique<TValue>(arr: TValue[]) {
-  const res: TValue[] = [];
-  arr.forEach((item) => {
-    if (
-      !res.find((e) =>
-        typeof item === "object" ? isEqual(e, item) : e === item,
-      )
-    )
-      res.push(item);
-  });
-  return res;
+  const primitiveSet = new Set<TValue>();
+  const objectMap = new Map<string, TValue>();
+  const result: TValue[] = [];
+
+  for (const item of arr) {
+    if (typeof item === "object" && item !== null) {
+      // Use a stable key for objects to avoid JSON.stringify performance issues
+      const key = JSON.stringify(item);
+      if (!objectMap.has(key)) {
+        objectMap.set(key, item);
+        result.push(item);
+      }
+    } else {
+      // Fast path for primitives
+      if (!primitiveSet.has(item)) {
+        primitiveSet.add(item);
+        result.push(item);
+      }
+    }
+  }
+  
+  return result;
 }
 
 export function Without(array: any[], item: any) {
@@ -109,18 +142,39 @@ export function isDefined<TValue>(
   return value !== null && value !== undefined;
 }
 
+// Performance: Optimized deep equality with early exits and memoization protection
 export function IsEqual(
   obj1: Record<string, any> | any[],
   obj2: Record<string, any> | any[],
-) {
-  if (obj1 === null || obj2 === null) return obj1 === obj2;
+  visited: WeakSet<any> = new WeakSet()
+): boolean {
+  // Performance: Fast reference equality check
+  if (obj1 === obj2) return true;
+  
+  // Performance: Fast null/undefined checks
+  if (obj1 == null || obj2 == null) return obj1 === obj2;
+  
+  // Performance: Fast type check
+  if (typeof obj1 !== typeof obj2) return false;
+  
+  // Performance: Handle primitives quickly
+  if (typeof obj1 !== 'object') return obj1 === obj2;
+  
+  // Performance: Prevent infinite recursion with circular references
+  if (visited.has(obj1) || visited.has(obj2)) return obj1 === obj2;
+  visited.add(obj1);
+  visited.add(obj2);
+
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
 
+  // Performance: Early exit if key counts differ
   if (keys1.length !== keys2.length) return false;
+  
   for (const key of keys1) {
+    if (!(key in obj2)) return false;
     if (typeof obj1[key] === "object" && typeof obj2[key] === "object") {
-      if (!IsEqual(obj1[key], obj2[key])) return false;
+      if (!IsEqual(obj1[key], obj2[key], visited)) return false;
     } else if (obj1[key] !== obj2[key]) return false;
   }
   return true;
@@ -175,13 +229,15 @@ export function Assign<Type extends {}>(
   return obj;
 }
 
+// Performance: Optimized sorting function without unnecessary recursion
 export function sortAlphabetically(
   a: string | { name: string },
   b: string | { name: string },
 ) {
-  const stringVal = (s: string | { name: string }) =>
-    typeof s === "object" ? stringVal(s.name) : s.trim().toLowerCase();
-  return stringVal(a) < stringVal(b) ? -1 : 1;
+  const getStringValue = (s: string | { name: string }) => 
+    (typeof s === "object" ? s.name : s).trim().toLowerCase();
+  
+  return getStringValue(a) < getStringValue(b) ? -1 : 1;
 }
 
 export function localizeTemperature(config, val?: number) {

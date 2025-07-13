@@ -21,6 +21,7 @@ export const SubscribeMixin = <T extends Constructor<ReactiveElement>>(superClas
 
     public disconnectedCallback() {
       super.disconnectedCallback();
+      // Performance: Ensure proper cleanup to prevent memory leaks
       if (this.__unsubs) {
         while (this.__unsubs.length) {
           const unsub = this.__unsubs.pop()!;
@@ -36,6 +37,7 @@ export const SubscribeMixin = <T extends Constructor<ReactiveElement>>(superClas
 
     protected updated(changedProps: PropertyValues) {
       super.updated(changedProps);
+      // Performance: Only re-subscribe when hass actually changes, not on every update
       if (changedProps.has('hass')) {
         this.__checkSubscribed();
       }
@@ -46,6 +48,7 @@ export const SubscribeMixin = <T extends Constructor<ReactiveElement>>(superClas
     }
 
     private __checkSubscribed(): void {
+      // Performance: Avoid redundant subscriptions
       if (this.__unsubs !== undefined || !((this as unknown) as Element).isConnected || this.hass === undefined) {
         return;
       }

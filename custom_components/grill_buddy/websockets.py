@@ -20,6 +20,7 @@ from .const import (
     INPUT_NUMBER_DOMAIN,
     PRESETS,
     PROBE_ID,
+    PROBE_INPUT_NUMBER_ENTITY,
     PROBE_LOWER_BOUND,
     PROBE_NAME,
     PROBE_PRESET,
@@ -95,6 +96,7 @@ class GrillBuddyProbeView(HomeAssistantView):
                 vol.Optional(PROBE_STATE_UPDATE_SETTING): vol.Or(int, None),
                 vol.Optional(PROBE_SOURCE_TYPE): vol.Or(cv.string, None),
                 vol.Optional(PROBE_TARGET_TEMPERATURE): vol.Or(int, float, None),
+                vol.Optional(PROBE_INPUT_NUMBER_ENTITY): vol.Or(cv.string, None),
                 vol.Optional(ATTR_REMOVE): cv.boolean,
             }
         )
@@ -134,15 +136,18 @@ def websocket_get_probes(hass, connection, msg):
     # as they are stored in C in the system itself
     if not coordinator._ha_is_metric:
         for p in probes:
-            probes[p[PROBE_ID]][PROBE_LOWER_BOUND] = get_localized_temperature(
-                p[PROBE_LOWER_BOUND], False
-            )
-            probes[p[PROBE_ID]][PROBE_UPPER_BOUND] = get_localized_temperature(
-                p[PROBE_UPPER_BOUND], False
-            )
-            probes[p[PROBE_ID]][PROBE_TARGET_TEMPERATURE] = get_localized_temperature(
-                p[PROBE_TARGET_TEMPERATURE], False
-            )
+            if p[PROBE_LOWER_BOUND] is not None:
+                p[PROBE_LOWER_BOUND] = get_localized_temperature(
+                    p[PROBE_LOWER_BOUND], False
+                )
+            if p[PROBE_UPPER_BOUND] is not None:
+                p[PROBE_UPPER_BOUND] = get_localized_temperature(
+                    p[PROBE_UPPER_BOUND], False
+                )
+            if p[PROBE_TARGET_TEMPERATURE] is not None:
+                p[PROBE_TARGET_TEMPERATURE] = get_localized_temperature(
+                    p[PROBE_TARGET_TEMPERATURE], False
+                )
     connection.send_result(msg["id"], probes)
 
 
