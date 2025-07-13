@@ -27,7 +27,10 @@ export class GrillBuddyViewGeneral extends SubscribeMixin(LitElement) {
   @property() config?: Config;
 
   public hassSubscribe(): Promise<UnsubscribeFunc>[] {
-    this._fetchData();
+    // Performance: Only fetch data if not already loaded to prevent double-fetching
+    if (!this.config) {
+      this._fetchData();
+    }
     return [
       this.hass!.connection.subscribeMessage(() => this._fetchData(), {
         type: DOMAIN + "_config_updated",
@@ -39,7 +42,12 @@ export class GrillBuddyViewGeneral extends SubscribeMixin(LitElement) {
     if (!this.hass) {
       return;
     }
-    this.config = await fetchConfig(this.hass);
+    // Performance: Use cached fetchConfig for better performance
+    try {
+      this.config = await fetchConfig(this.hass);
+    } catch (error) {
+      console.error('Error fetching config:', error);
+    }
     /*this.data = pick(this.config, [
       CONF_CALC_TIME,
       CONF_AUTO_CALC_ENABLED,

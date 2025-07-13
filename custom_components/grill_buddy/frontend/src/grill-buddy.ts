@@ -16,18 +16,36 @@ export class GrillBuddyPanel extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
   @property({ type: Boolean, reflect: true }) public narrow!: boolean;
 
-  async firstUpdated() {
-    window.addEventListener("location-changed", () => {
-      if (!window.location.pathname.includes(PLATFORM)) return;
-      this.requestUpdate();
-    });
+  // Performance: Cache for expensive operations
+  private _isInitialized = false;
+  private _haElementsLoaded = false;
 
-    await loadHaForm();
-    this.requestUpdate();
+  async firstUpdated() {
+    // Performance: Avoid multiple event listener registrations
+    if (!this._isInitialized) {
+      window.addEventListener("location-changed", () => {
+        if (!window.location.pathname.includes(PLATFORM)) return;
+        this.requestUpdate();
+      });
+      this._isInitialized = true;
+    }
+
+    // Performance: Load HA elements asynchronously without blocking render
+    if (!this._haElementsLoaded) {
+      loadHaForm().then(() => {
+        this._haElementsLoaded = true;
+        this.requestUpdate();
+      }).catch(error => {
+        console.error('Failed to load HA elements:', error);
+      });
+    }
   }
 
   render() {
-    if (!customElements.get("ha-panel-config")) return html` loading... `;
+    // Performance: Cache the panel config check result to avoid repeated DOM queries
+    if (!this._haElementsLoaded) {
+      return html` <div>Loading Grill Buddy...</div> `;
+    }
 
     const path = getPath();
     return html`
