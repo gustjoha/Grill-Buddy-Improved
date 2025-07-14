@@ -21,9 +21,11 @@
         "sourcetype": "Get target temperature from",
         "sourcetypes": {
           "preset": "Preset",
-          "value": "Custom value"
+          "value": "Custom value",
+          "input_number": "Input number entity"
         },
-        "value": "Target temperature"
+        "value": "Target temperature",
+        "input_number_entity": "Input number entity"
       },
       "errors": {
         "invalid_source": "Invalid source",

@@ -72,6 +72,7 @@ export class Probe {
   probe_upper_bound?: number;
   probe_state_update_setting?: number;
   probe_source_type: string;
+  probe_input_number_entity?: string;
 
   constructor(
     i: number,
@@ -83,6 +84,7 @@ export class Probe {
     u?: number,
     sus?: number,
     tv?: number,
+    ine?: string,
   ) {
     this.probe_id = i;
     this.probe_name = n;
@@ -93,5 +95,6 @@ export class Probe {
     this.probe_upper_bound = u;
     this.probe_state_update_setting = sus;
     this.probe_target_temperature = tv;
+    this.probe_input_number_entity = ine;
   }
 }

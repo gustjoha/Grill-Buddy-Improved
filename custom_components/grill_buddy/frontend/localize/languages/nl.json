@@ -21,9 +21,11 @@
         "sourcetype": "Stel doeltemperatuur in met",
         "sourcetypes": {
           "preset": "Instelling",
-          "value": "Eigen waarde"
+          "value": "Eigen waarde",
+          "input_number": "Input number entiteit"
         },
-        "value": "Doeltemperatuur"
+        "value": "Doeltemperatuur",
+        "input_number_entity": "Input number entiteit"
       },
       "errors": {
         "invalid_source": "Bron bestaat niet",

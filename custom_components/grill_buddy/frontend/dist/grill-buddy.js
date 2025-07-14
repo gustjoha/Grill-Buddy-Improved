@@ -44,7 +44,7 @@
     a = o.ShadowRoot && (void 0 === o.ShadyCSS || o.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype,
     l = Symbol(),
     h = new WeakMap();
-  class c {
+  class u {
     constructor(e, t, r) {
       if (this._$cssResult$ = !0, r !== l) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
       this.cssText = e, this.t = t;
@@ -62,18 +62,18 @@
       return this.cssText;
     }
   }
-  const u = (e, ...t) => {
+  const c = (e, ...t) => {
       const r = 1 === e.length ? e[0] : t.reduce((t, r, i) => t + (e => {
         if (!0 === e._$cssResult$) return e.cssText;
         if ("number" == typeof e) return e;
         throw Error("Value passed to 'css' function must be a 'css' function result: " + e + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
       })(r) + e[i + 1], e[0]);
-      return new c(r, e, l);
+      return new u(r, e, l);
     },
     p = a ? e => e : e => e instanceof CSSStyleSheet ? (e => {
       let t = "";
       for (const r of e.cssRules) t += r.cssText;
-      return (e => new c("string" == typeof e ? e : e + "", void 0, l))(t);
+      return (e => new u("string" == typeof e ? e : e + "", void 0, l))(t);
     })(e) : e
     /**
          * @license
@@ -324,15 +324,15 @@
   }, null == g || g({
     ReactiveElement: A
   }), (null !== (d = m.reactiveElementVersions) && void 0 !== d ? d : m.reactiveElementVersions = []).push("1.6.3");
-  const H = window,
-    $ = H.trustedTypes,
-    T = $ ? $.createPolicy("lit-html", {
+  const $ = window,
+    H = $.trustedTypes,
+    T = H ? H.createPolicy("lit-html", {
       createHTML: e => e
     }) : void 0,
     S = "$lit$",
-    B = `lit$${(Math.random() + "").slice(9)}$`,
-    P = "?" + B,
-    L = `<${P}>`,
+    P = `lit$${(Math.random() + "").slice(9)}$`,
+    B = "?" + P,
+    L = `<${B}>`,
     C = document,
     O = () => C.createComment(""),
     N = e => null === e || "object" != typeof e && "function" != typeof e,
@@ -369,10 +369,10 @@
       let r,
         l,
         h = -1,
-        c = 0;
-      for (; c < t.length && (o.lastIndex = c, l = o.exec(t), null !== l);) c = o.lastIndex, o === x ? "!--" === l[1] ? o = M : void 0 !== l[1] ? o = U : void 0 !== l[2] ? (F.test(l[2]) && (s = RegExp("</" + l[2], "g")), o = k) : void 0 !== l[3] && (o = k) : o === k ? ">" === l[0] ? (o = null != s ? s : x, h = -1) : void 0 === l[1] ? h = -2 : (h = o.lastIndex - l[2].length, r = l[1], o = void 0 === l[3] ? k : '"' === l[3] ? D : G) : o === D || o === G ? o = k : o === M || o === U ? o = x : (o = k, s = void 0);
-      const u = o === k && e[a + 1].startsWith("/>") ? " " : "";
-      n += o === x ? t + L : h >= 0 ? (i.push(r), t.slice(0, h) + S + t.slice(h) + B + u) : t + B + (-2 === h ? (i.push(void 0), a) : u);
+        u = 0;
+      for (; u < t.length && (o.lastIndex = u, l = o.exec(t), null !== l);) u = o.lastIndex, o === x ? "!--" === l[1] ? o = M : void 0 !== l[1] ? o = U : void 0 !== l[2] ? (F.test(l[2]) && (s = RegExp("</" + l[2], "g")), o = k) : void 0 !== l[3] && (o = k) : o === k ? ">" === l[0] ? (o = null != s ? s : x, h = -1) : void 0 === l[1] ? h = -2 : (h = o.lastIndex - l[2].length, r = l[1], o = void 0 === l[3] ? k : '"' === l[3] ? D : G) : o === D || o === G ? o = k : o === M || o === U ? o = x : (o = k, s = void 0);
+      const c = o === k && e[a + 1].startsWith("/>") ? " " : "";
+      n += o === x ? t + L : h >= 0 ? (i.push(r), t.slice(0, h) + S + t.slice(h) + P + c) : t + P + (-2 === h ? (i.push(void 0), a) : c);
     }
     return [W(e, n + (e[r] || "<?>") + (2 === t ? "</svg>" : "")), i];
   };
@@ -397,10 +397,10 @@
         if (1 === i.nodeType) {
           if (i.hasAttributes()) {
             const e = [];
-            for (const t of i.getAttributeNames()) if (t.endsWith(S) || t.startsWith(B)) {
+            for (const t of i.getAttributeNames()) if (t.endsWith(S) || t.startsWith(P)) {
               const r = h[n++];
               if (e.push(t), void 0 !== r) {
-                const e = i.getAttribute(r.toLowerCase() + S).split(B),
+                const e = i.getAttribute(r.toLowerCase() + S).split(P),
                   t = /([.?@])?(.*)/.exec(r);
                 a.push({
                   type: 1,
@@ -417,10 +417,10 @@
             for (const t of e) i.removeAttribute(t);
           }
           if (F.test(i.tagName)) {
-            const e = i.textContent.split(B),
+            const e = i.textContent.split(P),
               t = e.length - 1;
             if (t > 0) {
-              i.textContent = $ ? $.emptyScript : "";
+              i.textContent = H ? H.emptyScript : "";
               for (let r = 0; r < t; r++) i.append(e[r], O()), X.nextNode(), a.push({
                 type: 2,
                 index: ++s
@@ -428,15 +428,15 @@
               i.append(e[t], O());
             }
           }
-        } else if (8 === i.nodeType) if (i.data === P) a.push({
+        } else if (8 === i.nodeType) if (i.data === B) a.push({
           type: 2,
           index: s
         });else {
           let e = -1;
-          for (; -1 !== (e = i.data.indexOf(B, e + 1));) a.push({
+          for (; -1 !== (e = i.data.indexOf(P, e + 1));) a.push({
             type: 7,
             index: s
-          }), e += B.length - 1;
+          }), e += P.length - 1;
         }
         s++;
       }
@@ -592,7 +592,7 @@
       this.element[this.name] = e === z ? void 0 : e;
     }
   }
-  const re = $ ? $.emptyScript : "";
+  const re = H ? H.emptyScript : "";
   class ie extends ee {
     constructor() {
       super(...arguments), this.type = 4;
@@ -629,8 +629,8 @@
       q(this, e);
     }
   }
-  const oe = H.litHtmlPolyfillSupport;
-  null == oe || oe(Y, J), (null !== (w = H.litHtmlVersions) && void 0 !== w ? w : H.litHtmlVersions = []).push("2.8.0");
+  const oe = $.litHtmlPolyfillSupport;
+  null == oe || oe(Y, J), (null !== (w = $.litHtmlVersions) && void 0 !== w ? w : $.litHtmlVersions = []).push("2.8.0");
   /**
        * @license
        * Copyright 2017 Google LLC
@@ -676,8 +676,8 @@
   he.finalized = !0, he._$litElement$ = !0, null === (ae = globalThis.litElementHydrateSupport) || void 0 === ae || ae.call(globalThis, {
     LitElement: he
   });
-  const ce = globalThis.litElementPolyfillSupport;
-  null == ce || ce({
+  const ue = globalThis.litElementPolyfillSupport;
+  null == ue || ue({
     LitElement: he
   }), (null !== (le = globalThis.litElementVersions) && void 0 !== le ? le : globalThis.litElementVersions = []).push("3.3.3");
   /**
@@ -685,7 +685,7 @@
        * Copyright 2017 Google LLC
        * SPDX-License-Identifier: BSD-3-Clause
        */
-  const ue = e => t => "function" == typeof t ? ((e, t) => (customElements.define(e, t), t))(e, t) : ((e, t) => {
+  const ce = e => t => "function" == typeof t ? ((e, t) => (customElements.define(e, t), t))(e, t) : ((e, t) => {
       const {
         kind: r,
         elements: i
@@ -828,69 +828,72 @@
       }
     },
     we = "grill_buddy",
-    He = "probe_name",
-    $e = "probe_source",
+    $e = "probe_name",
+    He = "probe_source",
     Te = "probe_preset",
     Se = "probe_lower_bound",
-    Be = "probe_upper_bound",
-    Pe = "probe_state_update_setting",
+    Pe = "probe_upper_bound",
+    Be = "probe_state_update_setting",
     Le = "probe_source_type",
     Ce = "source_type_preset",
-    Oe = "probe_target_temperature",
-    Ne = "metric",
-    Ie = {};
-  function Re(e) {
-    const t = Ie[e];
+    Oe = "source_type_value",
+    Ne = "source_type_input_number",
+    Ie = "probe_target_temperature",
+    Re = "probe_input_number_entity",
+    xe = "metric",
+    Me = {};
+  function Ue(e) {
+    const t = Me[e];
     return t && Date.now() - t.timestamp < t.ttl ? t.data : null;
   }
-  function xe(e, t, r = 3e4) {
-    Ie[e] = {
+  function ke(e, t, r = 3e4) {
+    Me[e] = {
       data: t,
       timestamp: Date.now(),
       ttl: r
     };
   }
-  const Me = e => {
+  const Ge = e => {
       const t = "config",
-        r = Re(t);
+        r = Ue(t);
       return r ? Promise.resolve(r) : e.callWS({
         type: we + "/config"
       }).then(e => {
         const r = e;
-        return xe(t, r), r;
+        return ke(t, r), r;
       });
     },
-    Ue = e => {
+    De = e => {
       const t = "probes",
-        r = Re(t);
+        r = Ue(t);
       return r ? Promise.resolve(r) : e.callWS({
         type: we + "/probes"
       }).then(e => {
         const r = e;
-        return xe(t, r, 5e3), r;
+        return ke(t, r, 5e3), r;
       });
     },
-    ke = e => {
+    Fe = e => {
       const t = "presets",
-        r = Re(t);
+        r = Ue(t);
       return r ? Promise.resolve(r) : e.callWS({
         type: we + "/presets"
       }).then(e => {
         const r = e;
-        return xe(t, r, 6e4), r;
+        return ke(t, r, 6e4), r;
       });
     },
-    Ge = e => {
+    je = e => {
       const t = "stateupdatesettings",
-        r = Re(t);
+        r = Ue(t);
       return r ? Promise.resolve(r) : e.callWS({
         type: we + "/stateupdatesettings"
       }).then(e => {
         const r = e;
-        return xe(t, r, 6e4), r;
+        return ke(t, r, 6e4), r;
       });
     },
-    De = e => {
+    Ve = e => {
       class t extends e {
         connectedCallback() {
           super.connectedCallback(), this.__checkSubscribed();
@@ -918,13 +921,13 @@
         attribute: !1
       })], t.prototype, "hass", void 0), t;
     };
-  function Fe(e, t) {
+  function ze(e, t) {
     !function (e, t) {
       const r = e;
       ve(r, "show-dialog", {
         dialogTag: "error-dialog",
         dialogImport: () => Promise.resolve().then(function () {
-          return Yr;
+          return Jr;
         }),
         dialogParams: {
           error: t
@@ -934,10 +937,10 @@
     ${e.error}:${e.body.message ? j` ${e.body.message} ` : ""}
   `);
   }
-  function je(e) {
-    return e.units == Ne ? "°C" : "°F";
+  function Ke(e) {
+    return e.units == xe ? "°C" : "°F";
   }
-  const Ve = u`
+  const Xe = c`
   ha-card {
     display: flex;
     flex-direction: column;
@@ -1075,7 +1078,7 @@
   }
 
 `;
-  u`
+  c`
   /* mwc-dialog (ha-dialog) styles */
   ha-dialog {
     --mdc-dialog-min-width: 400px;
@@ -1099,7 +1102,7 @@
     margin-bottom: 10px;
   }
 `;
-  let ze = class extends De(he) {
+  let We = class extends Ve(he) {
     hassSubscribe() {
       return this.config || this._fetchData(), [this.hass.connection.subscribeMessage(() => this._fetchData(), {
         type: we + "_config_updated"
@@ -1108,7 +1111,7 @@
     async _fetchData() {
       if (this.hass) {
         try {
-          this.config = await Me(this.hass);
+          this.config = await Ge(this.hass);
         } catch (e) {}
         this.data = this.config;
       }
@@ -1123,7 +1126,7 @@
     }
     saveData(e) {
       var t, r;
-      this.hass && this.data && (this.data = Object.assign(Object.assign({}, this.data), e), (t = this.hass, r = this.data, t.callApi("POST", we + "/config", r)).catch(e => Fe(e, this.shadowRoot.querySelector("ha-card"))).then());
+      this.hass && this.data && (this.data = Object.assign(Object.assign({}, this.data), e), (t = this.hass, r = this.data, t.callApi("POST", we + "/config", r)).catch(e => ze(e, this.shadowRoot.querySelector("ha-card"))).then());
     }
     toggleInformation(e) {
       var t;
@@ -1131,8 +1134,8 @@
       r && ("hidden" != r.className ? r.className = "hidden" : r.className = "information");
     }
     static get styles() {
-      return u`
-      ${Ve}
+      return c`
+      ${Xe}
       .hidden {
         display: none;
       }
@@ -1146,14 +1149,14 @@
     `;
     }
   };
-  s([me()], ze.prototype, "narrow", void 0), s([me()], ze.prototype, "path", void 0), s([me()], ze.prototype, "data", void 0), s([me()], ze.prototype, "config", void 0), ze = s([ue("grill-buddy-view-general")], ze);
+  s([me()], We.prototype, "narrow", void 0), s([me()], We.prototype, "path", void 0), s([me()], We.prototype, "data", void 0), s([me()], We.prototype, "config", void 0), We = s([ce("grill-buddy-view-general")], We);
   /**
        * @license
        * Copyright 2017 Google LLC
        * SPDX-License-Identifier: BSD-3-Clause
        */
-  const Ke = 2;
-  class Xe {
+  const Ze = 2;
+  class Ye {
     constructor(e) {}
     get _$AU() {
       return this._$AM._$AU;
@@ -1173,9 +1176,9 @@
        * Copyright 2017 Google LLC
        * SPDX-License-Identifier: BSD-3-Clause
        */
-  class We extends Xe {
+  class qe extends Ye {
     constructor(e) {
-      if (super(e), this.et = z, e.type !== Ke) throw Error(this.constructor.directiveName + "() can only be used in child bindings");
+      if (super(e), this.et = z, e.type !== Ze) throw Error(this.constructor.directiveName + "() can only be used in child bindings");
     }
     render(e) {
       if (e === z || null == e) return this.ft = void 0, this.et = e;
@@ -1191,15 +1194,15 @@
       };
     }
   }
-  We.directiveName = "unsafeHTML", We.resultType = 1;
-  const Ze = (e => (...t) => ({
+  qe.directiveName = "unsafeHTML", qe.resultType = 1;
+  const Qe = (e => (...t) => ({
     _$litDirective$: e,
     values: t
-  }))(We);
-  var Ye,
-    qe,
-    Qe,
-    Je = {
+  }))(qe);
+  var Je,
+    et,
+    tt,
+    rt = {
       actions: {
         delete: "Delete"
       },
@@ -1207,7 +1210,7 @@
         select: "Select"
       }
     },
-    et = {
+    it = {
       probes: {
         title: "Probes",
         description: "Set up your probes here",
@@ -1221,9 +1224,11 @@
           sourcetype: "Get target temperature from",
           sourcetypes: {
             preset: "Preset",
-            value: "Custom value"
+            value: "Custom value",
+            input_number: "Input number entity"
           },
-          value: "Target temperature"
+          value: "Target temperature",
+          input_number_entity: "Input number entity"
         },
         errors: {
           invalid_source: "Invalid source",
@@ -1254,8 +1259,8 @@
         }
       }
     },
-    tt = "Grill Buddy",
-    rt = {
+    st = "Grill Buddy",
+    nt = {
       presets: {
         beef_rare: "Beef (rare)",
         beef_medium_rare: "Beef (medium rare)",
@@ -1282,30 +1287,30 @@
         veal_well_done: "Veal (well done)"
       }
     },
-    it = {
+    ot = {
       at_target_temperature: "At target temperature",
       within_bounds: "Temperature within range",
       outside_bounds: "Temperature outside range",
       above_upper_bound: "Temperature above upper threshold",
       below_lower_bound: "Temperature below lower threshold"
     },
-    st = {
-      common: Je,
-      panels: et,
-      title: tt,
-      defaults: rt,
-      state_update_settings: it
+    at = {
+      common: rt,
+      panels: it,
+      title: st,
+      defaults: nt,
+      state_update_settings: ot
     },
-    nt = Object.freeze({
+    lt = Object.freeze({
       __proto__: null,
-      common: Je,
-      panels: et,
-      title: tt,
-      defaults: rt,
-      state_update_settings: it,
-      default: st
+      common: rt,
+      panels: it,
+      title: st,
+      defaults: nt,
+      state_update_settings: ot,
+      default: at
     }),
-    ot = {
+    ht = {
       actions: {
         delete: "Verwijderen"
       },
@@ -1313,7 +1318,7 @@
         select: "Kies"
       }
     },
-    at = {
+    ut = {
       probes: {
         title: "Thermometers",
         description: "Stel je thermometers hier in",
@@ -1327,9 +1332,11 @@
           sourcetype: "Stel doeltemperatuur in met",
           sourcetypes: {
             preset: "Instelling",
-            value: "Eigen waarde"
+            value: "Eigen waarde",
+            input_number: "Input number entiteit"
           },
-          value: "Doeltemperatuur"
+          value: "Doeltemperatuur",
+          input_number_entity: "Input number entiteit"
         },
         errors: {
           invalid_source: "Bron bestaat niet",
@@ -1360,8 +1367,8 @@
         }
       }
     },
-    lt = "Grill Buddy",
-    ht = {
+    ct = "Grill Buddy",
+    pt = {
       presets: {
         beef_rare: "Rundvlees (rare)",
         beef_medium_rare: "Rundvlees (medium rare)",
@@ -1388,30 +1395,30 @@
         veal_well_done: "Kalfsvlees (well done)"
       }
     },
-    ct = {
+    dt = {
       at_target_temperature: "Temperatuur bereikt",
       within_bounds: "Temperatuur binnen bereik",
       outside_bounds: "Temperatuur buiten bereik",
       above_upper_bound: "Temperatuur hoger dan maximum",
       below_lower_bound: "Temperatuur lager dan minimum"
     },
-    ut = {
-      common: ot,
-      panels: at,
-      title: lt,
-      defaults: ht,
-      state_update_settings: ct
+    mt = {
+      common: ht,
+      panels: ut,
+      title: ct,
+      defaults: pt,
+      state_update_settings: dt
     },
-    pt = Object.freeze({
+    bt = Object.freeze({
       __proto__: null,
-      common: ot,
-      panels: at,
-      title: lt,
-      defaults: ht,
-      state_update_settings: ct,
-      default: ut
+      common: ht,
+      panels: ut,
+      title: ct,
+      defaults: pt,
+      state_update_settings: dt,
+      default: mt
     }),
-    dt = {
+    ft = {
       actions: {
         delete: "Löschen"
       },
@@ -1419,7 +1426,7 @@
         select: "Auswählen"
       }
     },
-    mt = {
+    gt = {
       probes: {
         title: "Fühler",
         description: "Richte deine Fühler hier ein",
@@ -1433,9 +1440,11 @@
           sourcetype: "Zieltemperatur beziehen von",
           sourcetypes: {
             preset: "Voreinstellung",
-            value: "Benutzerdefinierter Wert"
+            value: "Benutzerdefinierter Wert",
+            input_number: "Input Number Entität"
           },
-          value: "Zieltemperatur"
+          value: "Zieltemperatur",
+          input_number_entity: "Input Number Entität"
         },
         errors: {
           invalid_source: "Ungültige Quelle",
@@ -1466,8 +1475,8 @@
         }
       }
     },
-    bt = "Grill Buddy",
-    ft = {
+    _t = "Grill Buddy",
+    vt = {
       presets: {
         beef_rare: "Rind (blutig)",
         beef_medium_rare: "Rind (medium rare)",
@@ -1494,74 +1503,74 @@
         veal_well_done: "Kalb (well done)"
       }
     },
-    gt = {
+    yt = {
       at_target_temperature: "Bei Zieltemperatur",
       within_bounds: "Temperatur im Bereich",
       outside_bounds: "Temperatur außerhalb des Bereichs",
       above_upper_bound: "Temperatur über der oberen Schwelle",
       below_lower_bound: "Temperatur unter der unteren Schwelle"
     },
-    _t = {
-      common: dt,
-      panels: mt,
-      title: bt,
-      defaults: ft,
-      state_update_settings: gt
+    Et = {
+      common: ft,
+      panels: gt,
+      title: _t,
+      defaults: vt,
+      state_update_settings: yt
     },
-    vt = Object.freeze({
+    At = Object.freeze({
       __proto__: null,
-      common: dt,
-      panels: mt,
-      title: bt,
-      defaults: ft,
-      state_update_settings: gt,
-      default: _t
+      common: ft,
+      panels: gt,
+      title: _t,
+      defaults: vt,
+      state_update_settings: yt,
+      default: Et
     });
-  function yt(e) {
-    return e.type === qe.literal;
-  }
-  function Et(e) {
-    return e.type === qe.argument;
-  }
-  function At(e) {
-    return e.type === qe.number;
-  }
   function wt(e) {
-    return e.type === qe.date;
-  }
-  function Ht(e) {
-    return e.type === qe.time;
+    return e.type === et.literal;
   }
   function $t(e) {
-    return e.type === qe.select;
+    return e.type === et.argument;
+  }
+  function Ht(e) {
+    return e.type === et.number;
   }
   function Tt(e) {
-    return e.type === qe.plural;
+    return e.type === et.date;
   }
   function St(e) {
-    return e.type === qe.pound;
-  }
-  function Bt(e) {
-    return e.type === qe.tag;
+    return e.type === et.time;
   }
   function Pt(e) {
-    return !(!e || "object" != typeof e || e.type !== Qe.number);
+    return e.type === et.select;
+  }
+  function Bt(e) {
+    return e.type === et.plural;
   }
   function Lt(e) {
-    return !(!e || "object" != typeof e || e.type !== Qe.dateTime);
+    return e.type === et.pound;
+  }
+  function Ct(e) {
+    return e.type === et.tag;
+  }
+  function Ot(e) {
+    return !(!e || "object" != typeof e || e.type !== tt.number);
+  }
+  function Nt(e) {
+    return !(!e || "object" != typeof e || e.type !== tt.dateTime);
   }
   !function (e) {
     e[e.EXPECT_ARGUMENT_CLOSING_BRACE = 1] = "EXPECT_ARGUMENT_CLOSING_BRACE", e[e.EMPTY_ARGUMENT = 2] = "EMPTY_ARGUMENT", e[e.MALFORMED_ARGUMENT = 3] = "MALFORMED_ARGUMENT", e[e.EXPECT_ARGUMENT_TYPE = 4] = "EXPECT_ARGUMENT_TYPE", e[e.INVALID_ARGUMENT_TYPE = 5] = "INVALID_ARGUMENT_TYPE", e[e.EXPECT_ARGUMENT_STYLE = 6] = "EXPECT_ARGUMENT_STYLE", e[e.INVALID_NUMBER_SKELETON = 7] = "INVALID_NUMBER_SKELETON", e[e.INVALID_DATE_TIME_SKELETON = 8] = "INVALID_DATE_TIME_SKELETON", e[e.EXPECT_NUMBER_SKELETON = 9] = "EXPECT_NUMBER_SKELETON", e[e.EXPECT_DATE_TIME_SKELETON = 10] = "EXPECT_DATE_TIME_SKELETON", e[e.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE = 11] = "UNCLOSED_QUOTE_IN_ARGUMENT_STYLE", e[e.EXPECT_SELECT_ARGUMENT_OPTIONS = 12] = "EXPECT_SELECT_ARGUMENT_OPTIONS", e[e.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE = 13] = "EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE", e[e.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE = 14] = "INVALID_PLURAL_ARGUMENT_OFFSET_VALUE", e[e.EXPECT_SELECT_ARGUMENT_SELECTOR = 15] = "EXPECT_SELECT_ARGUMENT_SELECTOR", e[e.EXPECT_PLURAL_ARGUMENT_SELECTOR = 16] = "EXPECT_PLURAL_ARGUMENT_SELECTOR", e[e.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT = 17] = "EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT", e[e.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT = 18] = "EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT", e[e.INVALID_PLURAL_ARGUMENT_SELECTOR = 19] = "INVALID_PLURAL_ARGUMENT_SELECTOR", e[e.DUPLICATE_PLURAL_ARGUMENT_SELECTOR = 20] = "DUPLICATE_PLURAL_ARGUMENT_SELECTOR", e[e.DUPLICATE_SELECT_ARGUMENT_SELECTOR = 21] = "DUPLICATE_SELECT_ARGUMENT_SELECTOR", e[e.MISSING_OTHER_CLAUSE = 22] = "MISSING_OTHER_CLAUSE", e[e.INVALID_TAG = 23] = "INVALID_TAG", e[e.INVALID_TAG_NAME = 25] = "INVALID_TAG_NAME", e[e.UNMATCHED_CLOSING_TAG = 26] = "UNMATCHED_CLOSING_TAG", e[e.UNCLOSED_TAG = 27] = "UNCLOSED_TAG";
-  }(Ye || (Ye = {})), function (e) {
+  }(Je || (Je = {})), function (e) {
     e[e.literal = 0] = "literal", e[e.argument = 1] = "argument", e[e.number = 2] = "number", e[e.date = 3] = "date", e[e.time = 4] = "time", e[e.select = 5] = "select", e[e.plural = 6] = "plural", e[e.pound = 7] = "pound", e[e.tag = 8] = "tag";
-  }(qe || (qe = {})), function (e) {
+  }(et || (et = {})), function (e) {
     e[e.number = 0] = "number", e[e.dateTime = 1] = "dateTime";
-  }(Qe || (Qe = {}));
-  var Ct = /[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/,
-    Ot = /(?:[Eec]{1,6}|G{1,5}|[Qq]{1,5}|(?:[yYur]+|U{1,5})|[ML]{1,5}|d{1,2}|D{1,3}|F{1}|[abB]{1,5}|[hkHK]{1,2}|w{1,2}|W{1}|m{1,2}|s{1,2}|[zZOvVxX]{1,4})(?=([^']*'[^']*')*[^']*$)/g;
-  function Nt(e) {
+  }(tt || (tt = {}));
+  var It = /[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/,
+    Rt = /(?:[Eec]{1,6}|G{1,5}|[Qq]{1,5}|(?:[yYur]+|U{1,5})|[ML]{1,5}|d{1,2}|D{1,3}|F{1}|[abB]{1,5}|[hkHK]{1,2}|w{1,2}|W{1}|m{1,2}|s{1,2}|[zZOvVxX]{1,4})(?=([^']*'[^']*')*[^']*$)/g;
+  function xt(e) {
     var t = {};
-    return e.replace(Ot, function (e) {
+    return e.replace(Rt, function (e) {
       var r = e.length;
       switch (e[0]) {
         case "G":
@@ -1648,18 +1657,18 @@
       return "";
     }), t;
   }
-  var It = /[\t-\r \x85\u200E\u200F\u2028\u2029]/i;
-  var Rt = /^\.(?:(0+)(\*)?|(#+)|(0+)(#+))$/g,
-    xt = /^(@+)?(\+|#+)?[rs]?$/g,
-    Mt = /(\*)(0+)|(#+)(0+)|(0+)/g,
-    Ut = /^(0+)$/;
-  function kt(e) {
+  var Mt = /[\t-\r \x85\u200E\u200F\u2028\u2029]/i;
+  var Ut = /^\.(?:(0+)(\*)?|(#+)|(0+)(#+))$/g,
+    kt = /^(@+)?(\+|#+)?[rs]?$/g,
+    Gt = /(\*)(0+)|(#+)(0+)|(0+)/g,
+    Dt = /^(0+)$/;
+  function Ft(e) {
     var t = {};
-    return "r" === e[e.length - 1] ? t.roundingPriority = "morePrecision" : "s" === e[e.length - 1] && (t.roundingPriority = "lessPrecision"), e.replace(xt, function (e, r, i) {
+    return "r" === e[e.length - 1] ? t.roundingPriority = "morePrecision" : "s" === e[e.length - 1] && (t.roundingPriority = "lessPrecision"), e.replace(kt, function (e, r, i) {
       return "string" != typeof i ? (t.minimumSignificantDigits = r.length, t.maximumSignificantDigits = r.length) : "+" === i ? t.minimumSignificantDigits = r.length : "#" === r[0] ? t.maximumSignificantDigits = r.length : (t.minimumSignificantDigits = r.length, t.maximumSignificantDigits = r.length + ("string" == typeof i ? i.length : 0)), "";
     }), t;
   }
-  function Gt(e) {
+  function jt(e) {
     switch (e) {
       case "sign-auto":
         return {
@@ -1699,7 +1708,7 @@
         };
     }
   }
-  function Dt(e) {
+  function Vt(e) {
     var t;
     if ("E" === e[0] && "E" === e[1] ? (t = {
       notation: "engineering"
@@ -1707,16 +1716,16 @@
       notation: "scientific"
     }, e = e.slice(1)), t) {
       var r = e.slice(0, 2);
-      if ("+!" === r ? (t.signDisplay = "always", e = e.slice(2)) : "+?" === r && (t.signDisplay = "exceptZero", e = e.slice(2)), !Ut.test(e)) throw new Error("Malformed concise eng/scientific notation");
+      if ("+!" === r ? (t.signDisplay = "always", e = e.slice(2)) : "+?" === r && (t.signDisplay = "exceptZero", e = e.slice(2)), !Dt.test(e)) throw new Error("Malformed concise eng/scientific notation");
       t.minimumIntegerDigits = e.length;
     }
     return t;
   }
-  function Ft(e) {
-    var t = Gt(e);
+  function zt(e) {
+    var t = jt(e);
     return t || {};
   }
-  function jt(e) {
+  function Kt(e) {
     for (var t = {}, r = 0, s = e; r < s.length; r++) {
       var n = s[r];
       switch (n.stem) {
@@ -1754,14 +1763,14 @@
           t = i(i(i({}, t), {
             notation: "scientific"
           }), n.options.reduce(function (e, t) {
-            return i(i({}, e), Ft(t));
+            return i(i({}, e), zt(t));
           }, {}));
           continue;
         case "engineering":
           t = i(i(i({}, t), {
             notation: "engineering"
           }), n.options.reduce(function (e, t) {
-            return i(i({}, e), Ft(t));
+            return i(i({}, e), zt(t));
           }, {}));
           continue;
         case "notation-simple":
@@ -1805,7 +1814,7 @@
           continue;
         case "integer-width":
           if (n.options.length > 1) throw new RangeError("integer-width stems only accept a single optional option");
-          n.options[0].replace(Mt, function (e, r, i, s, n, o) {
+          n.options[0].replace(Gt, function (e, r, i, s, n, o) {
             if (r) t.minimumIntegerDigits = i.length;else {
               if (s && n) throw new Error("We currently do not support maximum integer digits");
               if (o) throw new Error("We currently do not support exact integer digits");
@@ -1814,26 +1823,26 @@
           });
           continue;
       }
-      if (Ut.test(n.stem)) t.minimumIntegerDigits = n.stem.length;else if (Rt.test(n.stem)) {
+      if (Dt.test(n.stem)) t.minimumIntegerDigits = n.stem.length;else if (Ut.test(n.stem)) {
         if (n.options.length > 1) throw new RangeError("Fraction-precision stems only accept a single optional option");
-        n.stem.replace(Rt, function (e, r, i, s, n, o) {
+        n.stem.replace(Ut, function (e, r, i, s, n, o) {
           return "*" === i ? t.minimumFractionDigits = r.length : s && "#" === s[0] ? t.maximumFractionDigits = s.length : n && o ? (t.minimumFractionDigits = n.length, t.maximumFractionDigits = n.length + o.length) : (t.minimumFractionDigits = r.length, t.maximumFractionDigits = r.length), "";
         });
         var o = n.options[0];
         "w" === o ? t = i(i({}, t), {
           trailingZeroDisplay: "stripIfInteger"
-        }) : o && (t = i(i({}, t), kt(o)));
-      } else if (xt.test(n.stem)) t = i(i({}, t), kt(n.stem));else {
-        var a = Gt(n.stem);
+        }) : o && (t = i(i({}, t), Ft(o)));
+      } else if (kt.test(n.stem)) t = i(i({}, t), Ft(n.stem));else {
+        var a = jt(n.stem);
         a && (t = i(i({}, t), a));
-        var l = Dt(n.stem);
+        var l = Vt(n.stem);
         l && (t = i(i({}, t), l));
       }
     }
     return t;
   }
-  var Vt,
-    zt = {
+  var Xt,
+    Wt = {
       "001": ["H", "h"],
       AC: ["H", "h", "hb", "hB"],
       AD: ["H", "hB"],
@@ -2108,7 +2117,7 @@
       "te-IN": ["hB", "h", "H"],
       "zu-ZA": ["H", "hB", "hb", "h"]
     };
-  function Kt(e) {
+  function Zt(e) {
     var t = e.hourCycle;
     if (void 0 === t && e.hourCycles && e.hourCycles.length && (t = e.hourCycles[0]), t) switch (t) {
       case "h24":
@@ -2124,38 +2133,38 @@
     }
     var r,
       i = e.language;
-    return "root" !== i && (r = e.maximize().region), (zt[r || ""] || zt[i || ""] || zt["".concat(i, "-001")] || zt["001"])[0];
+    return "root" !== i && (r = e.maximize().region), (Wt[r || ""] || Wt[i || ""] || Wt["".concat(i, "-001")] || Wt["001"])[0];
   }
-  var Xt = new RegExp("^".concat(Ct.source, "*")),
-    Wt = new RegExp("".concat(Ct.source, "*$"));
-  function Zt(e, t) {
+  var Yt = new RegExp("^".concat(It.source, "*")),
+    qt = new RegExp("".concat(It.source, "*$"));
+  function Qt(e, t) {
     return {
       start: e,
       end: t
     };
   }
-  var Yt = !!String.prototype.startsWith && "_a".startsWith("a", 1),
-    qt = !!String.fromCodePoint,
-    Qt = !!Object.fromEntries,
-    Jt = !!String.prototype.codePointAt,
-    er = !!String.prototype.trimStart,
-    tr = !!String.prototype.trimEnd,
-    rr = !!Number.isSafeInteger ? Number.isSafeInteger : function (e) {
+  var Jt = !!String.prototype.startsWith && "_a".startsWith("a", 1),
+    er = !!String.fromCodePoint,
+    tr = !!Object.fromEntries,
+    rr = !!String.prototype.codePointAt,
+    ir = !!String.prototype.trimStart,
+    sr = !!String.prototype.trimEnd,
+    nr = !!Number.isSafeInteger ? Number.isSafeInteger : function (e) {
       return "number" == typeof e && isFinite(e) && Math.floor(e) === e && Math.abs(e) <= 9007199254740991;
     },
-    ir = !0;
+    or = !0;
   try {
-    ir = "a" === (null === (Vt = ur("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu").exec("a")) || void 0 === Vt ? void 0 : Vt[0]);
+    or = "a" === (null === (Xt = mr("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu").exec("a")) || void 0 === Xt ? void 0 : Xt[0]);
   } catch (M) {
-    ir = !1;
+    or = !1;
   }
-  var sr,
-    nr = Yt ? function (e, t, r) {
+  var ar,
+    lr = Jt ? function (e, t, r) {
       return e.startsWith(t, r);
     } : function (e, t, r) {
       return e.slice(r, r + t.length) === t;
     },
-    or = qt ? String.fromCodePoint : function () {
+    hr = er ? String.fromCodePoint : function () {
       for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
       for (var r, i = "", s = e.length, n = 0; s > n;) {
         if ((r = e[n++]) > 1114111) throw RangeError(r + " is not a valid code point");
@@ -2163,7 +2172,7 @@
       }
       return i;
     },
-    ar = Qt ? Object.fromEntries : function (e) {
+    ur = tr ? Object.fromEntries : function (e) {
       for (var t = {}, r = 0, i = e; r < i.length; r++) {
         var s = i[r],
           n = s[0],
@@ -2172,7 +2181,7 @@
       }
       return t;
     },
-    lr = Jt ? function (e, t) {
+    cr = rr ? function (e, t) {
       return e.codePointAt(t);
     } : function (e, t) {
       var r = e.length;
@@ -2182,34 +2191,34 @@
         return s < 55296 || s > 56319 || t + 1 === r || (i = e.charCodeAt(t + 1)) < 56320 || i > 57343 ? s : i - 56320 + (s - 55296 << 10) + 65536;
       }
     },
-    hr = er ? function (e) {
+    pr = ir ? function (e) {
       return e.trimStart();
     } : function (e) {
-      return e.replace(Xt, "");
+      return e.replace(Yt, "");
     },
-    cr = tr ? function (e) {
+    dr = sr ? function (e) {
       return e.trimEnd();
     } : function (e) {
-      return e.replace(Wt, "");
+      return e.replace(qt, "");
     };
-  function ur(e, t) {
+  function mr(e, t) {
     return new RegExp(e, t);
   }
-  if (ir) {
-    var pr = ur("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu");
-    sr = function (e, t) {
+  if (or) {
+    var br = mr("([^\\p{White_Space}\\p{Pattern_Syntax}]*)", "yu");
+    ar = function (e, t) {
       var r;
-      return pr.lastIndex = t, null !== (r = pr.exec(e)[1]) && void 0 !== r ? r : "";
+      return br.lastIndex = t, null !== (r = br.exec(e)[1]) && void 0 !== r ? r : "";
     };
-  } else sr = function (e, t) {
+  } else ar = function (e, t) {
     for (var r = [];;) {
-      var i = lr(e, t);
-      if (void 0 === i || fr(i) || gr(i)) break;
+      var i = cr(e, t);
+      if (void 0 === i || vr(i) || yr(i)) break;
       r.push(i), t += i >= 65536 ? 2 : 1;
     }
-    return or.apply(void 0, r);
+    return hr.apply(void 0, r);
   };
-  var dr = function () {
+  var fr = function () {
     function e(e, t) {
       void 0 === t && (t = {}), this.message = e, this.position = {
         offset: 0,
@@ -2231,9 +2240,9 @@
           if (35 !== s || "plural" !== t && "selectordinal" !== t) {
             if (60 === s && !this.ignoreTag && 47 === this.peek()) {
               if (r) break;
-              return this.error(Ye.UNMATCHED_CLOSING_TAG, Zt(this.clonePosition(), this.clonePosition()));
+              return this.error(Je.UNMATCHED_CLOSING_TAG, Qt(this.clonePosition(), this.clonePosition()));
             }
-            if (60 === s && !this.ignoreTag && mr(this.peek() || 0)) {
+            if (60 === s && !this.ignoreTag && gr(this.peek() || 0)) {
               if ((n = this.parseTag(e, t)).err) return n;
               i.push(n.val);
             } else {
@@ -2244,8 +2253,8 @@
           } else {
             var o = this.clonePosition();
             this.bump(), i.push({
-              type: qe.pound,
-              location: Zt(o, this.clonePosition())
+              type: et.pound,
+              location: Qt(o, this.clonePosition())
             });
           }
         }
@@ -2260,9 +2269,9 @@
       var i = this.parseTagName();
       if (this.bumpSpace(), this.bumpIf("/>")) return {
         val: {
-          type: qe.literal,
+          type: et.literal,
           value: "<".concat(i, "/>"),
-          location: Zt(r, this.clonePosition())
+          location: Qt(r, this.clonePosition())
         },
         err: null
       };
@@ -2272,24 +2281,24 @@
         var n = s.val,
           o = this.clonePosition();
         if (this.bumpIf("</")) {
-          if (this.isEOF() || !mr(this.char())) return this.error(Ye.INVALID_TAG, Zt(o, this.clonePosition()));
+          if (this.isEOF() || !gr(this.char())) return this.error(Je.INVALID_TAG, Qt(o, this.clonePosition()));
           var a = this.clonePosition();
-          return i !== this.parseTagName() ? this.error(Ye.UNMATCHED_CLOSING_TAG, Zt(a, this.clonePosition())) : (this.bumpSpace(), this.bumpIf(">") ? {
+          return i !== this.parseTagName() ? this.error(Je.UNMATCHED_CLOSING_TAG, Qt(a, this.clonePosition())) : (this.bumpSpace(), this.bumpIf(">") ? {
             val: {
-              type: qe.tag,
+              type: et.tag,
               value: i,
               children: n,
-              location: Zt(r, this.clonePosition())
+              location: Qt(r, this.clonePosition())
             },
             err: null
-          } : this.error(Ye.INVALID_TAG, Zt(o, this.clonePosition())));
+          } : this.error(Je.INVALID_TAG, Qt(o, this.clonePosition())));
         }
-        return this.error(Ye.UNCLOSED_TAG, Zt(r, this.clonePosition()));
+        return this.error(Je.UNCLOSED_TAG, Qt(r, this.clonePosition()));
       }
-      return this.error(Ye.INVALID_TAG, Zt(r, this.clonePosition()));
+      return this.error(Je.INVALID_TAG, Qt(r, this.clonePosition()));
     }, e.prototype.parseTagName = function () {
       var e = this.offset();
-      for (this.bump(); !this.isEOF() && br(this.char());) this.bump();
+      for (this.bump(); !this.isEOF() && _r(this.char());) this.bump();
       return this.message.slice(e, this.offset());
     }, e.prototype.parseLiteral = function (e, t) {
       for (var r = this.clonePosition(), i = "";;) {
@@ -2303,17 +2312,17 @@
           }
         }
       }
-      var a = Zt(r, this.clonePosition());
+      var a = Qt(r, this.clonePosition());
       return {
         val: {
-          type: qe.literal,
+          type: et.literal,
           value: i,
           location: a
         },
         err: null
       };
     }, e.prototype.tryParseLeftAngleBracket = function () {
-      return this.isEOF() || 60 !== this.char() || !this.ignoreTag && (mr(e = this.peek() || 0) || 47 === e) ? null : (this.bump(), "<");
+      return this.isEOF() || 60 !== this.char() || !this.ignoreTag && (gr(e = this.peek() || 0) || 47 === e) ? null : (this.bump(), "<");
       var e;
     }, e.prototype.tryParseQuote = function (e) {
       if (this.isEOF() || 39 !== this.char()) return null;
@@ -2344,41 +2353,41 @@
         } else t.push(r);
         this.bump();
       }
-      return or.apply(void 0, t);
+      return hr.apply(void 0, t);
     }, e.prototype.tryParseUnquoted = function (e, t) {
       if (this.isEOF()) return null;
       var r = this.char();
-      return 60 === r || 123 === r || 35 === r && ("plural" === t || "selectordinal" === t) || 125 === r && e > 0 ? null : (this.bump(), or(r));
+      return 60 === r || 123 === r || 35 === r && ("plural" === t || "selectordinal" === t) || 125 === r && e > 0 ? null : (this.bump(), hr(r));
     }, e.prototype.parseArgument = function (e, t) {
       var r = this.clonePosition();
-      if (this.bump(), this.bumpSpace(), this.isEOF()) return this.error(Ye.EXPECT_ARGUMENT_CLOSING_BRACE, Zt(r, this.clonePosition()));
-      if (125 === this.char()) return this.bump(), this.error(Ye.EMPTY_ARGUMENT, Zt(r, this.clonePosition()));
+      if (this.bump(), this.bumpSpace(), this.isEOF()) return this.error(Je.EXPECT_ARGUMENT_CLOSING_BRACE, Qt(r, this.clonePosition()));
+      if (125 === this.char()) return this.bump(), this.error(Je.EMPTY_ARGUMENT, Qt(r, this.clonePosition()));
       var i = this.parseIdentifierIfPossible().value;
-      if (!i) return this.error(Ye.MALFORMED_ARGUMENT, Zt(r, this.clonePosition()));
-      if (this.bumpSpace(), this.isEOF()) return this.error(Ye.EXPECT_ARGUMENT_CLOSING_BRACE, Zt(r, this.clonePosition()));
+      if (!i) return this.error(Je.MALFORMED_ARGUMENT, Qt(r, this.clonePosition()));
+      if (this.bumpSpace(), this.isEOF()) return this.error(Je.EXPECT_ARGUMENT_CLOSING_BRACE, Qt(r, this.clonePosition()));
       switch (this.char()) {
         case 125:
           return this.bump(), {
             val: {
-              type: qe.argument,
+              type: et.argument,
               value: i,
-              location: Zt(r, this.clonePosition())
+              location: Qt(r, this.clonePosition())
             },
             err: null
           };
         case 44:
-          return this.bump(), this.bumpSpace(), this.isEOF() ? this.error(Ye.EXPECT_ARGUMENT_CLOSING_BRACE, Zt(r, this.clonePosition())) : this.parseArgumentOptions(e, t, i, r);
+          return this.bump(), this.bumpSpace(), this.isEOF() ? this.error(Je.EXPECT_ARGUMENT_CLOSING_BRACE, Qt(r, this.clonePosition())) : this.parseArgumentOptions(e, t, i, r);
         default:
-          return this.error(Ye.MALFORMED_ARGUMENT, Zt(r, this.clonePosition()));
+          return this.error(Je.MALFORMED_ARGUMENT, Qt(r, this.clonePosition()));
       }
     }, e.prototype.parseIdentifierIfPossible = function () {
       var e = this.clonePosition(),
         t = this.offset(),
-        r = sr(this.message, t),
+        r = ar(this.message, t),
         i = t + r.length;
       return this.bumpTo(i), {
         value: r,
-        location: Zt(e, this.clonePosition())
+        location: Qt(e, this.clonePosition())
       };
     }, e.prototype.parseArgumentOptions = function (e, t, r, s) {
       var n,
@@ -2387,7 +2396,7 @@
         l = this.clonePosition();
       switch (a) {
         case "":
-          return this.error(Ye.EXPECT_ARGUMENT_TYPE, Zt(o, l));
+          return this.error(Je.EXPECT_ARGUMENT_TYPE, Qt(o, l));
         case "number":
         case "date":
         case "time":
@@ -2395,28 +2404,28 @@
           var h = null;
           if (this.bumpIf(",")) {
             this.bumpSpace();
-            var c = this.clonePosition();
+            var u = this.clonePosition();
             if ((_ = this.parseSimpleArgStyleIfPossible()).err) return _;
-            if (0 === (m = cr(_.val)).length) return this.error(Ye.EXPECT_ARGUMENT_STYLE, Zt(this.clonePosition(), this.clonePosition()));
+            if (0 === (m = dr(_.val)).length) return this.error(Je.EXPECT_ARGUMENT_STYLE, Qt(this.clonePosition(), this.clonePosition()));
             h = {
               style: m,
-              styleLocation: Zt(c, this.clonePosition())
+              styleLocation: Qt(u, this.clonePosition())
             };
           }
           if ((v = this.tryParseArgumentClose(s)).err) return v;
-          var u = Zt(s, this.clonePosition());
-          if (h && nr(null == h ? void 0 : h.style, "::", 0)) {
-            var p = hr(h.style.slice(2));
+          var c = Qt(s, this.clonePosition());
+          if (h && lr(null == h ? void 0 : h.style, "::", 0)) {
+            var p = pr(h.style.slice(2));
             if ("number" === a) return (_ = this.parseNumberSkeletonFromString(p, h.styleLocation)).err ? _ : {
               val: {
-                type: qe.number,
+                type: et.number,
                 value: r,
-                location: u,
+                location: c,
                 style: _.val
               },
               err: null
             };
-            if (0 === p.length) return this.error(Ye.EXPECT_DATE_TIME_SKELETON, u);
+            if (0 === p.length) return this.error(Je.EXPECT_DATE_TIME_SKELETON, c);
             var d = p;
             this.locale && (d = function (e, t) {
               for (var r = "", i = 0; i < e.length; i++) {
@@ -2425,7 +2434,7 @@
                   for (var n = 0; i + 1 < e.length && e.charAt(i + 1) === s;) n++, i++;
                   var o = 1 + (1 & n),
                     a = n < 2 ? 1 : 3 + (n >> 1),
-                    l = Kt(t);
+                    l = Zt(t);
                   for ("H" != l && "k" != l || (a = 0); a-- > 0;) r += "a";
                   for (; o-- > 0;) r = l + r;
                 } else r += "J" === s ? "H" : s;
@@ -2433,16 +2442,16 @@
               return r;
             }(p, this.locale));
             var m = {
-              type: Qe.dateTime,
+              type: tt.dateTime,
               pattern: d,
               location: h.styleLocation,
-              parsedOptions: this.shouldParseSkeletons ? Nt(d) : {}
+              parsedOptions: this.shouldParseSkeletons ? xt(d) : {}
             };
             return {
               val: {
-                type: "date" === a ? qe.date : qe.time,
+                type: "date" === a ? et.date : et.time,
                 value: r,
-                location: u,
+                location: c,
                 style: m
               },
               err: null
@@ -2450,9 +2459,9 @@
           }
           return {
             val: {
-              type: "number" === a ? qe.number : "date" === a ? qe.date : qe.time,
+              type: "number" === a ? et.number : "date" === a ? et.date : et.time,
               value: r,
-              location: u,
+              location: c,
               style: null !== (n = null == h ? void 0 : h.style) && void 0 !== n ? n : null
             },
             err: null
@@ -2461,34 +2470,34 @@
         case "selectordinal":
         case "select":
           var b = this.clonePosition();
-          if (this.bumpSpace(), !this.bumpIf(",")) return this.error(Ye.EXPECT_SELECT_ARGUMENT_OPTIONS, Zt(b, i({}, b)));
+          if (this.bumpSpace(), !this.bumpIf(",")) return this.error(Je.EXPECT_SELECT_ARGUMENT_OPTIONS, Qt(b, i({}, b)));
           this.bumpSpace();
           var f = this.parseIdentifierIfPossible(),
             g = 0;
           if ("select" !== a && "offset" === f.value) {
-            if (!this.bumpIf(":")) return this.error(Ye.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, Zt(this.clonePosition(), this.clonePosition()));
+            if (!this.bumpIf(":")) return this.error(Je.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, Qt(this.clonePosition(), this.clonePosition()));
             var _;
-            if (this.bumpSpace(), (_ = this.tryParseDecimalInteger(Ye.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, Ye.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE)).err) return _;
+            if (this.bumpSpace(), (_ = this.tryParseDecimalInteger(Je.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, Je.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE)).err) return _;
             this.bumpSpace(), f = this.parseIdentifierIfPossible(), g = _.val;
           }
           var v,
             y = this.tryParsePluralOrSelectOptions(e, a, t, f);
           if (y.err) return y;
           if ((v = this.tryParseArgumentClose(s)).err) return v;
-          var E = Zt(s, this.clonePosition());
+          var E = Qt(s, this.clonePosition());
           return "select" === a ? {
             val: {
-              type: qe.select,
+              type: et.select,
               value: r,
-              options: ar(y.val),
+              options: ur(y.val),
               location: E
             },
             err: null
           } : {
             val: {
-              type: qe.plural,
+              type: et.plural,
               value: r,
-              options: ar(y.val),
+              options: ur(y.val),
               offset: g,
               pluralType: "plural" === a ? "cardinal" : "ordinal",
               location: E
@@ -2496,10 +2505,10 @@
             err: null
           };
         default:
-          return this.error(Ye.INVALID_ARGUMENT_TYPE, Zt(o, l));
+          return this.error(Je.INVALID_ARGUMENT_TYPE, Qt(o, l));
       }
     }, e.prototype.tryParseArgumentClose = function (e) {
-      return this.isEOF() || 125 !== this.char() ? this.error(Ye.EXPECT_ARGUMENT_CLOSING_BRACE, Zt(e, this.clonePosition())) : (this.bump(), {
+      return this.isEOF() || 125 !== this.char() ? this.error(Je.EXPECT_ARGUMENT_CLOSING_BRACE, Qt(e, this.clonePosition())) : (this.bump(), {
         val: !0,
         err: null
       });
@@ -2509,7 +2518,7 @@
           case 39:
             this.bump();
             var r = this.clonePosition();
-            if (!this.bumpUntil("'")) return this.error(Ye.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE, Zt(r, this.clonePosition()));
+            if (!this.bumpUntil("'")) return this.error(Je.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE, Qt(r, this.clonePosition()));
             this.bump();
             break;
           case 123:
@@ -2535,7 +2544,7 @@
       try {
         r = function (e) {
           if (0 === e.length) throw new Error("Number skeleton cannot be empty");
-          for (var t = e.split(It).filter(function (e) {
+          for (var t = e.split(Mt).filter(function (e) {
               return e.length > 0;
             }), r = [], i = 0, s = t; i < s.length; i++) {
             var n = s[i].split("/");
@@ -2548,41 +2557,41 @@
           }
           return r;
         }(e);
-      } catch (We) {
-        return this.error(Ye.INVALID_NUMBER_SKELETON, t);
+      } catch (qe) {
+        return this.error(Je.INVALID_NUMBER_SKELETON, t);
       }
       return {
         val: {
-          type: Qe.number,
+          type: tt.number,
           tokens: r,
           location: t,
-          parsedOptions: this.shouldParseSkeletons ? jt(r) : {}
+          parsedOptions: this.shouldParseSkeletons ? Kt(r) : {}
         },
         err: null
       };
     }, e.prototype.tryParsePluralOrSelectOptions = function (e, t, r, i) {
       for (var s, n = !1, o = [], a = new Set(), l = i.value, h = i.location;;) {
         if (0 === l.length) {
-          var c = this.clonePosition();
+          var u = this.clonePosition();
           if ("select" === t || !this.bumpIf("=")) break;
-          var u = this.tryParseDecimalInteger(Ye.EXPECT_PLURAL_ARGUMENT_SELECTOR, Ye.INVALID_PLURAL_ARGUMENT_SELECTOR);
-          if (u.err) return u;
-          h = Zt(c, this.clonePosition()), l = this.message.slice(c.offset, this.offset());
+          var c = this.tryParseDecimalInteger(Je.EXPECT_PLURAL_ARGUMENT_SELECTOR, Je.INVALID_PLURAL_ARGUMENT_SELECTOR);
+          if (c.err) return c;
+          h = Qt(u, this.clonePosition()), l = this.message.slice(u.offset, this.offset());
         }
-        if (a.has(l)) return this.error("select" === t ? Ye.DUPLICATE_SELECT_ARGUMENT_SELECTOR : Ye.DUPLICATE_PLURAL_ARGUMENT_SELECTOR, h);
+        if (a.has(l)) return this.error("select" === t ? Je.DUPLICATE_SELECT_ARGUMENT_SELECTOR : Je.DUPLICATE_PLURAL_ARGUMENT_SELECTOR, h);
         "other" === l && (n = !0), this.bumpSpace();
         var p = this.clonePosition();
-        if (!this.bumpIf("{")) return this.error("select" === t ? Ye.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT : Ye.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT, Zt(this.clonePosition(), this.clonePosition()));
+        if (!this.bumpIf("{")) return this.error("select" === t ? Je.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT : Je.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT, Qt(this.clonePosition(), this.clonePosition()));
         var d = this.parseMessage(e + 1, t, r);
         if (d.err) return d;
         var m = this.tryParseArgumentClose(p);
         if (m.err) return m;
         o.push([l, {
           value: d.val,
-          location: Zt(p, this.clonePosition())
+          location: Qt(p, this.clonePosition())
         }]), a.add(l), this.bumpSpace(), l = (s = this.parseIdentifierIfPossible()).value, h = s.location;
       }
-      return 0 === o.length ? this.error("select" === t ? Ye.EXPECT_SELECT_ARGUMENT_SELECTOR : Ye.EXPECT_PLURAL_ARGUMENT_SELECTOR, Zt(this.clonePosition(), this.clonePosition())) : this.requiresOtherClause && !n ? this.error(Ye.MISSING_OTHER_CLAUSE, Zt(this.clonePosition(), this.clonePosition())) : {
+      return 0 === o.length ? this.error("select" === t ? Je.EXPECT_SELECT_ARGUMENT_SELECTOR : Je.EXPECT_PLURAL_ARGUMENT_SELECTOR, Qt(this.clonePosition(), this.clonePosition())) : this.requiresOtherClause && !n ? this.error(Je.MISSING_OTHER_CLAUSE, Qt(this.clonePosition(), this.clonePosition())) : {
         val: o,
         err: null
       };
@@ -2595,8 +2604,8 @@
         if (!(o >= 48 && o <= 57)) break;
         s = !0, n = 10 * n + (o - 48), this.bump();
       }
-      var a = Zt(i, this.clonePosition());
-      return s ? rr(n *= r) ? {
+      var a = Qt(i, this.clonePosition());
+      return s ? nr(n *= r) ? {
         val: n,
         err: null
       } : this.error(t, a) : this.error(e, a);
@@ -2613,7 +2622,7 @@
     }, e.prototype.char = function () {
       var e = this.position.offset;
       if (e >= this.message.length) throw Error("out of bound");
-      var t = lr(this.message, e);
+      var t = cr(this.message, e);
       if (void 0 === t) throw Error("Offset ".concat(e, " is at invalid UTF-16 code unit boundary"));
       return t;
     }, e.prototype.error = function (e, t) {
@@ -2631,7 +2640,7 @@
         10 === e ? (this.position.line += 1, this.position.column = 1, this.position.offset += 1) : (this.position.column += 1, this.position.offset += e < 65536 ? 1 : 2);
       }
     }, e.prototype.bumpIf = function (e) {
-      if (nr(this.message, e, this.offset())) {
+      if (lr(this.message, e, this.offset())) {
         for (var t = 0; t < e.length; t++) this.bump();
         return !0;
       }
@@ -2649,7 +2658,7 @@
         if (this.bump(), this.isEOF()) break;
       }
     }, e.prototype.bumpSpace = function () {
-      for (; !this.isEOF() && fr(this.char());) this.bump();
+      for (; !this.isEOF() && vr(this.char());) this.bump();
     }, e.prototype.peek = function () {
       if (this.isEOF()) return null;
       var e = this.char(),
@@ -2658,91 +2667,91 @@
       return null != r ? r : null;
     }, e;
   }();
-  function mr(e) {
+  function gr(e) {
     return e >= 97 && e <= 122 || e >= 65 && e <= 90;
   }
-  function br(e) {
+  function _r(e) {
     return 45 === e || 46 === e || e >= 48 && e <= 57 || 95 === e || e >= 97 && e <= 122 || e >= 65 && e <= 90 || 183 == e || e >= 192 && e <= 214 || e >= 216 && e <= 246 || e >= 248 && e <= 893 || e >= 895 && e <= 8191 || e >= 8204 && e <= 8205 || e >= 8255 && e <= 8256 || e >= 8304 && e <= 8591 || e >= 11264 && e <= 12271 || e >= 12289 && e <= 55295 || e >= 63744 && e <= 64975 || e >= 65008 && e <= 65533 || e >= 65536 && e <= 983039;
   }
-  function fr(e) {
+  function vr(e) {
     return e >= 9 && e <= 13 || 32 === e || 133 === e || e >= 8206 && e <= 8207 || 8232 === e || 8233 === e;
   }
-  function gr(e) {
+  function yr(e) {
     return e >= 33 && e <= 35 || 36 === e || e >= 37 && e <= 39 || 40 === e || 41 === e || 42 === e || 43 === e || 44 === e || 45 === e || e >= 46 && e <= 47 || e >= 58 && e <= 59 || e >= 60 && e <= 62 || e >= 63 && e <= 64 || 91 === e || 92 === e || 93 === e || 94 === e || 96 === e || 123 === e || 124 === e || 125 === e || 126 === e || 161 === e || e >= 162 && e <= 165 || 166 === e || 167 === e || 169 === e || 171 === e || 172 === e || 174 === e || 176 === e || 177 === e || 182 === e || 187 === e || 191 === e || 215 === e || 247 === e || e >= 8208 && e <= 8213 || e >= 8214 && e <= 8215 || 8216 === e || 8217 === e || 8218 === e || e >= 8219 && e <= 8220 || 8221 === e || 8222 === e || 8223 === e || e >= 8224 && e <= 8231 || e >= 8240 && e <= 8248 || 8249 === e || 8250 === e || e >= 8251 && e <= 8254 || e >= 8257 && e <= 8259 || 8260 === e || 8261 === e || 8262 === e || e >= 8263 && e <= 8273 || 8274 === e || 8275 === e || e >= 8277 && e <= 8286 || e >= 8592 && e <= 8596 || e >= 8597 && e <= 8601 || e >= 8602 && e <= 8603 || e >= 8604 && e <= 8607 || 8608 === e || e >= 8609 && e <= 8610 || 8611 === e || e >= 8612 && e <= 8613 || 8614 === e || e >= 8615 && e <= 8621 || 8622 === e || e >= 8623 && e <= 8653 || e >= 8654 && e <= 8655 || e >= 8656 && e <= 8657 || 8658 === e || 8659 === e || 8660 === e || e >= 8661 && e <= 8691 || e >= 8692 && e <= 8959 || e >= 8960 && e <= 8967 || 8968 === e || 8969 === e || 8970 === e || 8971 === e || e >= 8972 && e <= 8991 || e >= 8992 && e <= 8993 || e >= 8994 && e <= 9e3 || 9001 === e || 9002 === e || e >= 9003 && e <= 9083 || 9084 === e || e >= 9085 && e <= 9114 || e >= 9115 && e <= 9139 || e >= 9140 && e <= 9179 || e >= 9180 && e <= 9185 || e >= 9186 && e <= 9254 || e >= 9255 && e <= 9279 || e >= 9280 && e <= 9290 || e >= 9291 && e <= 9311 || e >= 9472 && e <= 9654 || 9655 === e || e >= 9656 && e <= 9664 || 9665 === e || e >= 9666 && e <= 9719 || e >= 9720 && e <= 9727 || e >= 9728 && e <= 9838 || 9839 === e || e >= 9840 && e <= 10087 || 10088 === e || 10089 === e || 10090 === e || 10091 === e || 10092 === e || 10093 === e || 10094 === e || 10095 === e || 10096 === e || 10097 === e || 10098 === e || 10099 === e || 10100 === e || 10101 === e || e >= 10132 && e <= 10175 || e >= 10176 && e <= 10180 || 10181 === e || 10182 === e || e >= 10183 && e <= 10213 || 10214 === e || 10215 === e || 10216 === e || 10217 === e || 10218 === e || 10219 === e || 10220 === e || 10221 === e || 10222 === e || 10223 === e || e >= 10224 && e <= 10239 || e >= 10240 && e <= 10495 || e >= 10496 && e <= 10626 || 10627 === e || 10628 === e || 10629 === e || 10630 === e || 10631 === e || 10632 === e || 10633 === e || 10634 === e || 10635 === e || 10636 === e || 10637 === e || 10638 === e || 10639 === e || 10640 === e || 10641 === e || 10642 === e || 10643 === e || 10644 === e || 10645 === e || 10646 === e || 10647 === e || 10648 === e || e >= 10649 && e <= 10711 || 10712 === e || 10713 === e || 10714 === e || 10715 === e || e >= 10716 && e <= 10747 || 10748 === e || 10749 === e || e >= 10750 && e <= 11007 || e >= 11008 && e <= 11055 || e >= 11056 && e <= 11076 || e >= 11077 && e <= 11078 || e >= 11079 && e <= 11084 || e >= 11085 && e <= 11123 || e >= 11124 && e <= 11125 || e >= 11126 && e <= 11157 || 11158 === e || e >= 11159 && e <= 11263 || e >= 11776 && e <= 11777 || 11778 === e || 11779 === e || 11780 === e || 11781 === e || e >= 11782 && e <= 11784 || 11785 === e || 11786 === e || 11787 === e || 11788 === e || 11789 === e || e >= 11790 && e <= 11798 || 11799 === e || e >= 11800 && e <= 11801 || 11802 === e || 11803 === e || 11804 === e || 11805 === e || e >= 11806 && e <= 11807 || 11808 === e || 11809 === e || 11810 === e || 11811 === e || 11812 === e || 11813 === e || 11814 === e || 11815 === e || 11816 === e || 11817 === e || e >= 11818 && e <= 11822 || 11823 === e || e >= 11824 && e <= 11833 || e >= 11834 && e <= 11835 || e >= 11836 && e <= 11839 || 11840 === e || 11841 === e || 11842 === e || e >= 11843 && e <= 11855 || e >= 11856 && e <= 11857 || 11858 === e || e >= 11859 && e <= 11903 || e >= 12289 && e <= 12291 || 12296 === e || 12297 === e || 12298 === e || 12299 === e || 12300 === e || 12301 === e || 12302 === e || 12303 === e || 12304 === e || 12305 === e || e >= 12306 && e <= 12307 || 12308 === e || 12309 === e || 12310 === e || 12311 === e || 12312 === e || 12313 === e || 12314 === e || 12315 === e || 12316 === e || 12317 === e || e >= 12318 && e <= 12319 || 12320 === e || 12336 === e || 64830 === e || 64831 === e || e >= 65093 && e <= 65094;
   }
-  function _r(e) {
+  function Er(e) {
     e.forEach(function (e) {
-      if (delete e.location, $t(e) || Tt(e)) for (var t in e.options) delete e.options[t].location, _r(e.options[t].value);else At(e) && Pt(e.style) || (wt(e) || Ht(e)) && Lt(e.style) ? delete e.style.location : Bt(e) && _r(e.children);
+      if (delete e.location, Pt(e) || Bt(e)) for (var t in e.options) delete e.options[t].location, Er(e.options[t].value);else Ht(e) && Ot(e.style) || (Tt(e) || St(e)) && Nt(e.style) ? delete e.style.location : Ct(e) && Er(e.children);
     });
   }
-  function vr(e, t) {
+  function Ar(e, t) {
     void 0 === t && (t = {}), t = i({
       shouldParseSkeletons: !0,
       requiresOtherClause: !0
     }, t);
-    var r = new dr(e, t).parse();
+    var r = new fr(e, t).parse();
     if (r.err) {
-      var s = SyntaxError(Ye[r.err.kind]);
+      var s = SyntaxError(Je[r.err.kind]);
       throw s.location = r.err.location, s.originalMessage = r.err.message, s;
     }
-    return (null == t ? void 0 : t.captureLocation) || _r(r.val), r.val;
+    return (null == t ? void 0 : t.captureLocation) || Er(r.val), r.val;
   }
-  function yr(e, t) {
-    var r = t && t.cache ? t.cache : Br,
-      i = t && t.serializer ? t.serializer : $r;
-    return (t && t.strategy ? t.strategy : Hr)(e, {
+  function wr(e, t) {
+    var r = t && t.cache ? t.cache : Cr,
+      i = t && t.serializer ? t.serializer : Pr;
+    return (t && t.strategy ? t.strategy : Sr)(e, {
       cache: r,
       serializer: i
     });
   }
-  function Er(e, t, r, i) {
+  function $r(e, t, r, i) {
     var s,
       n = null == (s = i) || "number" == typeof s || "boolean" == typeof s ? i : r(i),
       o = t.get(n);
     return void 0 === o && (o = e.call(this, i), t.set(n, o)), o;
   }
-  function Ar(e, t, r) {
+  function Hr(e, t, r) {
     var i = Array.prototype.slice.call(arguments, 3),
       s = r(i),
       n = t.get(s);
     return void 0 === n && (n = e.apply(this, i), t.set(s, n)), n;
   }
-  function wr(e, t, r, i, s) {
+  function Tr(e, t, r, i, s) {
     return r.bind(t, e, i, s);
   }
-  function Hr(e, t) {
-    return wr(e, this, 1 === e.length ? Er : Ar, t.cache.create(), t.serializer);
+  function Sr(e, t) {
+    return Tr(e, this, 1 === e.length ? $r : Hr, t.cache.create(), t.serializer);
   }
-  var $r = function () {
+  var Pr = function () {
     return JSON.stringify(arguments);
   };
-  function Tr() {
+  function Br() {
     this.cache = Object.create(null);
   }
-  Tr.prototype.get = function (e) {
+  Br.prototype.get = function (e) {
     return this.cache[e];
-  }, Tr.prototype.set = function (e, t) {
+  }, Br.prototype.set = function (e, t) {
     this.cache[e] = t;
   };
-  var Sr,
-    Br = {
+  var Lr,
+    Cr = {
       create: function () {
-        return new Tr();
+        return new Br();
       }
     },
-    Pr = {
+    Or = {
       variadic: function (e, t) {
-        return wr(e, this, Ar, t.cache.create(), t.serializer);
+        return Tr(e, this, Hr, t.cache.create(), t.serializer);
       },
       monadic: function (e, t) {
-        return wr(e, this, Er, t.cache.create(), t.serializer);
+        return Tr(e, this, $r, t.cache.create(), t.serializer);
       }
     };
   !function (e) {
     e.MISSING_VALUE = "MISSING_VALUE", e.INVALID_VALUE = "INVALID_VALUE", e.MISSING_INTL_API = "MISSING_INTL_API";
-  }(Sr || (Sr = {}));
-  var Lr,
-    Cr = function (e) {
+  }(Lr || (Lr = {}));
+  var Nr,
+    Ir = function (e) {
       function t(t, r, i) {
         var s = e.call(this, t) || this;
         return s.code = r, s.originalMessage = i, s;
@@ -2751,94 +2760,94 @@
         return "[formatjs Error: ".concat(this.code, "] ").concat(this.message);
       }, t;
     }(Error),
-    Or = function (e) {
+    Rr = function (e) {
       function t(t, r, i, s) {
-        return e.call(this, 'Invalid values for "'.concat(t, '": "').concat(r, '". Options are "').concat(Object.keys(i).join('", "'), '"'), Sr.INVALID_VALUE, s) || this;
+        return e.call(this, 'Invalid values for "'.concat(t, '": "').concat(r, '". Options are "').concat(Object.keys(i).join('", "'), '"'), Lr.INVALID_VALUE, s) || this;
       }
       return r(t, e), t;
-    }(Cr),
-    Nr = function (e) {
+    }(Ir),
+    xr = function (e) {
       function t(t, r, i) {
-        return e.call(this, 'Value for "'.concat(t, '" must be of type ').concat(r), Sr.INVALID_VALUE, i) || this;
+        return e.call(this, 'Value for "'.concat(t, '" must be of type ').concat(r), Lr.INVALID_VALUE, i) || this;
       }
       return r(t, e), t;
-    }(Cr),
-    Ir = function (e) {
+    }(Ir),
+    Mr = function (e) {
       function t(t, r) {
-        return e.call(this, 'The intl string context variable "'.concat(t, '" was not provided to the string "').concat(r, '"'), Sr.MISSING_VALUE, r) || this;
+        return e.call(this, 'The intl string context variable "'.concat(t, '" was not provided to the string "').concat(r, '"'), Lr.MISSING_VALUE, r) || this;
       }
       return r(t, e), t;
-    }(Cr);
-  function Rr(e) {
+    }(Ir);
+  function Ur(e) {
     return "function" == typeof e;
   }
-  function xr(e, t, r, i, s, n, o) {
-    if (1 === e.length && yt(e[0])) return [{
-      type: Lr.literal,
+  function kr(e, t, r, i, s, n, o) {
+    if (1 === e.length && wt(e[0])) return [{
+      type: Nr.literal,
       value: e[0].value
     }];
     for (var a = [], l = 0, h = e; l < h.length; l++) {
-      var c = h[l];
-      if (yt(c)) a.push({
-        type: Lr.literal,
-        value: c.value
-      });else if (St(c)) "number" == typeof n && a.push({
-        type: Lr.literal,
+      var u = h[l];
+      if (wt(u)) a.push({
+        type: Nr.literal,
+        value: u.value
+      });else if (Lt(u)) "number" == typeof n && a.push({
+        type: Nr.literal,
         value: r.getNumberFormat(t).format(n)
       });else {
-        var u = c.value;
-        if (!s || !(u in s)) throw new Ir(u, o);
-        var p = s[u];
-        if (Et(c)) p && "string" != typeof p && "number" != typeof p || (p = "string" == typeof p || "number" == typeof p ? String(p) : ""), a.push({
-          type: "string" == typeof p ? Lr.literal : Lr.object,
+        var c = u.value;
+        if (!s || !(c in s)) throw new Mr(c, o);
+        var p = s[c];
+        if ($t(u)) p && "string" != typeof p && "number" != typeof p || (p = "string" == typeof p || "number" == typeof p ? String(p) : ""), a.push({
+          type: "string" == typeof p ? Nr.literal : Nr.object,
           value: p
-        });else if (wt(c)) {
-          var d = "string" == typeof c.style ? i.date[c.style] : Lt(c.style) ? c.style.parsedOptions : void 0;
+        });else if (Tt(u)) {
+          var d = "string" == typeof u.style ? i.date[u.style] : Nt(u.style) ? u.style.parsedOptions : void 0;
           a.push({
-            type: Lr.literal,
+            type: Nr.literal,
             value: r.getDateTimeFormat(t, d).format(p)
           });
-        } else if (Ht(c)) {
-          d = "string" == typeof c.style ? i.time[c.style] : Lt(c.style) ? c.style.parsedOptions : i.time.medium;
+        } else if (St(u)) {
+          d = "string" == typeof u.style ? i.time[u.style] : Nt(u.style) ? u.style.parsedOptions : i.time.medium;
           a.push({
-            type: Lr.literal,
+            type: Nr.literal,
             value: r.getDateTimeFormat(t, d).format(p)
           });
-        } else if (At(c)) {
-          (d = "string" == typeof c.style ? i.number[c.style] : Pt(c.style) ? c.style.parsedOptions : void 0) && d.scale && (p *= d.scale || 1), a.push({
-            type: Lr.literal,
+        } else if (Ht(u)) {
+          (d = "string" == typeof u.style ? i.number[u.style] : Ot(u.style) ? u.style.parsedOptions : void 0) && d.scale && (p *= d.scale || 1), a.push({
+            type: Nr.literal,
             value: r.getNumberFormat(t, d).format(p)
           });
         } else {
-          if (Bt(c)) {
-            var m = c.children,
-              b = c.value,
+          if (Ct(u)) {
+            var m = u.children,
+              b = u.value,
               f = s[b];
-            if (!Rr(f)) throw new Nr(b, "function", o);
-            var g = f(xr(m, t, r, i, s, n).map(function (e) {
+            if (!Ur(f)) throw new xr(b, "function", o);
+            var g = f(kr(m, t, r, i, s, n).map(function (e) {
               return e.value;
             }));
             Array.isArray(g) || (g = [g]), a.push.apply(a, g.map(function (e) {
               return {
-                type: "string" == typeof e ? Lr.literal : Lr.object,
+                type: "string" == typeof e ? Nr.literal : Nr.object,
                 value: e
               };
             }));
           }
-          if ($t(c)) {
-            if (!(_ = c.options[p] || c.options.other)) throw new Or(c.value, p, Object.keys(c.options), o);
-            a.push.apply(a, xr(_.value, t, r, i, s));
-          } else if (Tt(c)) {
+          if (Pt(u)) {
+            if (!(_ = u.options[p] || u.options.other)) throw new Rr(u.value, p, Object.keys(u.options), o);
+            a.push.apply(a, kr(_.value, t, r, i, s));
+          } else if (Bt(u)) {
             var _;
-            if (!(_ = c.options["=".concat(p)])) {
-              if (!Intl.PluralRules) throw new Cr('Intl.PluralRules is not available in this environment.\nTry polyfilling it using "@formatjs/intl-pluralrules"\n', Sr.MISSING_INTL_API, o);
+            if (!(_ = u.options["=".concat(p)])) {
+              if (!Intl.PluralRules) throw new Ir('Intl.PluralRules is not available in this environment.\nTry polyfilling it using "@formatjs/intl-pluralrules"\n', Lr.MISSING_INTL_API, o);
               var v = r.getPluralRules(t, {
-                type: c.pluralType
-              }).select(p - (c.offset || 0));
-              _ = c.options[v] || c.options.other;
+                type: u.pluralType
+              }).select(p - (u.offset || 0));
+              _ = u.options[v] || u.options.other;
             }
-            if (!_) throw new Or(c.value, p, Object.keys(c.options), o);
-            a.push.apply(a, xr(_.value, t, r, i, s, p - (c.offset || 0)));
+            if (!_) throw new Rr(u.value, p, Object.keys(u.options), o);
+            a.push.apply(a, kr(_.value, t, r, i, s, p - (u.offset || 0)));
           } else ;
         }
       }
@@ -2846,11 +2855,11 @@
     return function (e) {
       return e.length < 2 ? e : e.reduce(function (e, t) {
         var r = e[e.length - 1];
-        return r && r.type === Lr.literal && t.type === Lr.literal ? r.value += t.value : e.push(t), e;
+        return r && r.type === Nr.literal && t.type === Nr.literal ? r.value += t.value : e.push(t), e;
       }, []);
     }(a);
   }
-  function Mr(e, t) {
+  function Gr(e, t) {
     return t ? Object.keys(e).reduce(function (r, s) {
       var n, o;
       return r[s] = (n = e[s], (o = t[s]) ? i(i(i({}, n || {}), o || {}), Object.keys(n).reduce(function (e, t) {
@@ -2858,7 +2867,7 @@
       }, {})) : n), r;
     }, i({}, e)) : e;
   }
-  function Ur(e) {
+  function Dr(e) {
     return {
       create: function () {
         return {
@@ -2874,8 +2883,8 @@
   }
   !function (e) {
     e[e.literal = 0] = "literal", e[e.object = 1] = "object";
-  }(Lr || (Lr = {}));
-  var kr = function () {
+  }(Nr || (Nr = {}));
+  var Fr = function () {
       function e(t, r, s, o) {
         var a,
           l = this;
@@ -2887,11 +2896,11 @@
           var t = l.formatToParts(e);
           if (1 === t.length) return t[0].value;
           var r = t.reduce(function (e, t) {
-            return e.length && t.type === Lr.literal && "string" == typeof e[e.length - 1] ? e[e.length - 1] += t.value : e.push(t.value), e;
+            return e.length && t.type === Nr.literal && "string" == typeof e[e.length - 1] ? e[e.length - 1] += t.value : e.push(t.value), e;
           }, []);
           return r.length <= 1 ? r[0] || "" : r;
         }, this.formatToParts = function (e) {
-          return xr(l.ast, l.locales, l.formatters, l.formats, e, void 0, l.message);
+          return kr(l.ast, l.locales, l.formatters, l.formats, e, void 0, l.message);
         }, this.resolvedOptions = function () {
           var e;
           return {
@@ -2903,7 +2912,7 @@
           if (this.message = t, !e.__parse) throw new TypeError("IntlMessageFormat.__parse must be set to process `message` of type `string`");
           var h = o || {};
           h.formatters;
-          var c = function (e, t) {
+          var u = function (e, t) {
             var r = {};
             for (var i in e) Object.prototype.hasOwnProperty.call(e, i) && t.indexOf(i) < 0 && (r[i] = e[i]);
             if (null != e && "function" == typeof Object.getOwnPropertySymbols) {
@@ -2912,36 +2921,36 @@
             }
             return r;
           }(h, ["formatters"]);
-          this.ast = e.__parse(t, i(i({}, c), {
+          this.ast = e.__parse(t, i(i({}, u), {
             locale: this.resolvedLocale
           }));
         } else this.ast = t;
         if (!Array.isArray(this.ast)) throw new TypeError("A message must be provided as a String or AST.");
-        this.formats = Mr(e.formats, s), this.formatters = o && o.formatters || (void 0 === (a = this.formatterCache) && (a = {
+        this.formats = Gr(e.formats, s), this.formatters = o && o.formatters || (void 0 === (a = this.formatterCache) && (a = {
           number: {},
           dateTime: {},
           pluralRules: {}
         }), {
-          getNumberFormat: yr(function () {
+          getNumberFormat: wr(function () {
             for (var e, t = [], r = 0; r < arguments.length; r++) t[r] = arguments[r];
             return new ((e = Intl.NumberFormat).bind.apply(e, n([void 0], t, !1)))();
           }, {
-            cache: Ur(a.number),
-            strategy: Pr.variadic
+            cache: Dr(a.number),
+            strategy: Or.variadic
           }),
-          getDateTimeFormat: yr(function () {
+          getDateTimeFormat: wr(function () {
             for (var e, t = [], r = 0; r < arguments.length; r++) t[r] = arguments[r];
             return new ((e = Intl.DateTimeFormat).bind.apply(e, n([void 0], t, !1)))();
           }, {
-            cache: Ur(a.dateTime),
-            strategy: Pr.variadic
+            cache: Dr(a.dateTime),
+            strategy: Or.variadic
           }),
-          getPluralRules: yr(function () {
+          getPluralRules: wr(function () {
             for (var e, t = [], r = 0; r < arguments.length; r++) t[r] = arguments[r];
             return new ((e = Intl.PluralRules).bind.apply(e, n([void 0], t, !1)))();
           }, {
-            cache: Ur(a.pluralRules),
-            strategy: Pr.variadic
+            cache: Dr(a.pluralRules),
+            strategy: Or.variadic
           })
         });
       }
@@ -2956,7 +2965,7 @@
           var t = Intl.NumberFormat.supportedLocalesOf(e);
           return t.length > 0 ? new Intl.Locale(t[0]) : new Intl.Locale("string" == typeof e ? e : e[0]);
         }
-      }, e.__parse = vr, e.formats = {
+      }, e.__parse = Ar, e.formats = {
         number: {
           integer: {
             maximumFractionDigits: 0
@@ -3016,26 +3025,26 @@
         }
       }, e;
     }(),
-    Gr = kr;
-  const Dr = {
-      en: nt,
-      nl: pt,
-      de: vt
+    jr = Fr;
+  const Vr = {
+      en: lt,
+      nl: bt,
+      de: At
     },
-    Fr = new Map(),
-    jr = new Map();
-  function Vr(e, t, ...r) {
+    zr = new Map(),
+    Kr = new Map();
+  function Xr(e, t, ...r) {
     const i = t.replace(/['"]+/g, ""),
       s = `${i}:${e}:${r.length > 0 ? JSON.stringify(r) : ""}`,
-      n = jr.get(s);
+      n = Kr.get(s);
     if (n) return n;
     let o;
     try {
-      o = e.split(".").reduce((e, t) => e[t], Dr[i]);
-    } catch (We) {
-      o = e.split(".").reduce((e, t) => e[t], Dr.en);
+      o = e.split(".").reduce((e, t) => e[t], Vr[i]);
+    } catch (qe) {
+      o = e.split(".").reduce((e, t) => e[t], Vr.en);
     }
-    if (void 0 === o && (o = e.split(".").reduce((e, t) => e[t], Dr.en)), !r.length) return jr.set(s, o), o;
+    if (void 0 === o && (o = e.split(".").reduce((e, t) => e[t], Vr.en)), !r.length) return Kr.set(s, o), o;
     const a = {};
     for (let h = 0; h < r.length; h += 2) {
       let e = r[h];
@@ -3043,16 +3052,16 @@
     }
     try {
       const e = `${i}:${o}`;
-      let r = Fr.get(e);
-      r || (r = new Gr(o, t), Fr.set(e, r));
+      let r = zr.get(e);
+      r || (r = new jr(o, t), zr.set(e, r));
       const n = r.format(a);
-      return jr.set(s, n), n;
+      return Kr.set(s, n), n;
     } catch (l) {
       const e = "Translation " + l;
-      return jr.set(s, e), e;
+      return Kr.set(s, e), e;
     }
   }
-  let zr = class extends De(he) {
+  let Wr = class extends Ve(he) {
     constructor() {
       super(...arguments), this.probes = [], this.presets = [], this.state_update_settings = [], this.sensors = [], this._renderCache = new Map(), this._lastProbesHash = "";
     }
@@ -3070,16 +3079,16 @@
       if (this.hass) try {
         const e = await (async e => {
           const t = "initial-data",
-            r = Re(t);
+            r = Ue(t);
           if (r) return r;
-          const [i, s, n, o] = await Promise.all([Me(e), Ue(e), ke(e), Ge(e)]),
+          const [i, s, n, o] = await Promise.all([Ge(e), De(e), Fe(e), je(e)]),
             a = {
               config: i,
               probes: s,
               presets: n,
               stateUpdateSettings: o
             };
-          return xe(t, a, 1e4), a;
+          return ke(t, a, 1e4), a;
         })(this.hass);
         this.config = e.config, this.probes = e.probes, this.presets = e.presets, this.state_update_settings = e.stateUpdateSettings;
       } catch (e) {}
@@ -3101,40 +3110,40 @@
       if (!this.hass) return;
       const r = Object.values(this.probes).at(t);
       var i, s;
-      r && (this.probes = this.probes.filter((e, r) => r !== t), this._renderCache.clear(), this._lastProbesHash = "", this.hass && (i = this.hass, s = r.probe_id.toString(), delete Ie.probes, delete Ie["initial-data"], i.callApi("POST", we + "/probes", {
+      r && (this.probes = this.probes.filter((e, r) => r !== t), this._renderCache.clear(), this._lastProbesHash = "", this.hass && (i = this.hass, s = r.probe_id.toString(), delete Me.probes, delete Me["initial-data"], i.callApi("POST", we + "/probes", {
         probe_id: s,
         remove: !0
       })));
     }
     saveToHA(e) {
       var t, r;
-      this.hass && (e.probe_source in this.hass.states ? (t = this.hass, r = e, delete Ie.probes, delete Ie["initial-data"], t.callApi("POST", we + "/probes", r)) : Fe({
+      this.hass && (e.probe_source in this.hass.states ? (t = this.hass, r = e, delete Me.probes, delete Me["initial-data"], t.callApi("POST", we + "/probes", r)) : ze({
         body: {
-          message: Vr("panels.probes.errors.source_does_not_exist", this.hass.language)
+          message: Xr("panels.probes.errors.source_does_not_exist", this.hass.language)
         },
-        error: Vr("panels.probes.errors.invalid_source", this.hass.language)
+        error: Xr("panels.probes.errors.invalid_source", this.hass.language)
       }, this.shadowRoot.querySelector("ha-card")));
     }
     renderTheOptions(e, t) {
       if (this.hass) {
-        let r = j`<option value="" ?selected=${void 0 === t}">---${Vr("common.labels.select", this.hass.language)}---</option>`;
+        let r = j`<option value="" ?selected=${void 0 === t}">---${Xr("common.labels.select", this.hass.language)}---</option>`;
         return Object.entries(e).map(([e, i]) => r = j`${r}
             <option
               value="${i.preset_id}"
               ?selected="${t === i.preset_id}"
             >
-              ${Ze(i.preset_icon)} ${i.preset_name}
+              ${Qe(i.preset_icon)} ${i.preset_name}
               (${function (e, t) {
-          if (null != t) return e.units != Ne ? Math.round(10 * (1.8 * t + 32)) / 10 : t;
+          if (null != t) return e.units != xe ? Math.round(10 * (1.8 * t + 32)) / 10 : t;
         }(this.config, i.preset_target_temperature)}
-              ${je(this.config)})
+              ${Ke(this.config)})
             </option>`), r;
       }
       return j``;
     }
     renderTheUpdateStatusWhenOptions(e, t) {
       if (this.hass) {
-        let r = j`<option value="" ?selected=${void 0 === t}">---${Vr("common.labels.select", this.hass.language)}---</option>`;
+        let r = j`<option value="" ?selected=${void 0 === t}">---${Xr("common.labels.select", this.hass.language)}---</option>`;
         return Object.entries(e).map(([e, i]) => r = j`${r}
             <option
               value="${i.stateupdatesetting_id}"
@@ -3148,11 +3157,12 @@
     renderProbe(e, t) {
       if (this.hass) {
         let r = j``;
-        const i = e.probe_source_type === Ce;
+        const i = e.probe_source_type === Ce,
+          s = e.probe_source_type === Ne;
         return r = i ? j`
           <div class="probeline">
             <label for="probe_preset${t}"
-              >${Vr("panels.probes.labels.preset", this.hass.language)}:</label
+              >${Xr("panels.probes.labels.preset", this.hass.language)}:</label
             >
             <select
               id="probe_preset${t}"
@@ -3163,17 +3173,32 @@
               ${this.renderTheOptions(this.presets, e.probe_preset)}
             </select>
           </div>
+        ` : s ? j`
+          <div class="probeline">
+            <label for="probe_input_number_entity${t}"
+              >${Xr("panels.probes.labels.input_number_entity", this.hass.language)}:</label
+            >
+            <input
+              type="text"
+              id="probe_input_number_entity${t}"
+              value="${e.probe_input_number_entity || ""}"
+              placeholder="input_number.my_target_temp"
+              @input="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
+          [Re]: r.target.value
+        }))}"
+            />
+          </div>
         ` : j`
           <div class="probeline">
             <label for="probe_target_temperature${t}"
-              >${Vr("panels.probes.labels.value", this.hass.language)}:</label
+              >${Xr("panels.probes.labels.value", this.hass.language)}:</label
             >
             <input
               text="text"
               id="probe_target_temperature${t}"
               value="${e.probe_target_temperature}"
               @input="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
-          [Oe]: parseInt(r.target.value)
+          [Ie]: parseInt(r.target.value)
         }))}"
             />
           </div>
@@ -3187,62 +3212,66 @@
           </div>
           <div class="card-content">
             <label for="probe_name${t}"
-              >${Vr("panels.probes.labels.name", this.hass.language)}:</label
+              >${Xr("panels.probes.labels.name", this.hass.language)}:</label
             >
             <input
               id="probe_name${t}"
               type="text"
               .value="${e.probe_name}"
               @input="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
-          [He]: r.target.value
+          [$e]: r.target.value
         }))}"
             />
             <div class="probeline">
               <label for="probe_source${t}"
-                >${Vr("panels.probes.labels.source", this.hass.language)}:</label
+                >${Xr("panels.probes.labels.source", this.hass.language)}:</label
               >
               <input id="probe_source${t}" type="text"
               .value="${e.probe_source}"
               @change="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
-          [$e]: r.target.value
+          [He]: r.target.value
         }))}"
               />
             </div>
             <div class="probeline">
-            <label for="probe_source_type${t}">${Vr("panels.probes.labels.sourcetype", this.hass.language)}:</label>
+            <label for="probe_source_type${t}">${Xr("panels.probes.labels.sourcetype", this.hass.language)}:</label>
             <input type="radio" id="probe_source_type_preset${t}" value="${Ce}" name="probe_source_type${t}"
             ?checked="${i}" @change="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
           [Le]: r.target.value
         }))}"/>
-              <label for="probe_source_type_preset${t}">${Vr("panels.probes.labels.sourcetypes.preset", this.hass.language)}</label>
-              <input type="radio" id="probe_source_type_value${t}" value="${"source_type_value"}" name="probe_source_type${t}"
-              ?checked="${!i}" @change="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
+              <label for="probe_source_type_preset${t}">${Xr("panels.probes.labels.sourcetypes.preset", this.hass.language)}</label>
+              <input type="radio" id="probe_source_type_value${t}" value="${Oe}" name="probe_source_type${t}"
+              ?checked="${e.probe_source_type === Oe}" @change="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
           [Le]: r.target.value
-        }))}"/><label for="probe_source_type_value${t}">${Vr("panels.probes.labels.sourcetypes.value", this.hass.language)}</label>
+        }))}"/><label for="probe_source_type_value${t}">${Xr("panels.probes.labels.sourcetypes.value", this.hass.language)}</label>
+              <input type="radio" id="probe_source_type_input_number${t}" value="${Ne}" name="probe_source_type${t}"
+              ?checked="${s}" @change="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
+          [Le]: r.target.value
+        }))}"/><label for="probe_source_type_input_number${t}">${Xr("panels.probes.labels.sourcetypes.input_number", this.hass.language)}</label>
             </div>${r}
             <div class="probeline">
-      <label for="probe_lower_bound${t}">${Vr("panels.probes.labels.lower_bound", this.hass.language)}:</label><input id="probe_lower_bound${t}" class="shortinput" type = "text"
+      <label for="probe_lower_bound${t}">${Xr("panels.probes.labels.lower_bound", this.hass.language)}:</label><input id="probe_lower_bound${t}" class="shortinput" type = "text"
       .value="${e.probe_lower_bound}"
       @input="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
           [Se]: parseFloat(r.target.value)
         }))}"
-      /> ${je(this.config)}
+      /> ${Ke(this.config)}
       </div>
       <div class="probeline">
-      <label for="probe_upper_bound${t}">${Vr("panels.probes.labels.upper_bound", this.hass.language)}:</label>
+      <label for="probe_upper_bound${t}">${Xr("panels.probes.labels.upper_bound", this.hass.language)}:</label>
 <input id="probe_upper_bound${t}" class="shortinput" type="text"
 .value="${e.probe_upper_bound}"
 @input="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
-          [Be]: parseFloat(r.target.value)
+          [Pe]: parseFloat(r.target.value)
         }))}"
-/> ${je(this.config)}
+/> ${Ke(this.config)}
 </div>
 <div class="probeline">
-            <label for="probe_state_update_setting${t}">${Vr("panels.probes.labels.state_update_setting", this.hass.language)}:</label>
+            <label for="probe_state_update_setting${t}">${Xr("panels.probes.labels.state_update_setting", this.hass.language)}:</label>
             <select
             id="probe_state_update_setting${t}"
             @change="${r => this.handleEditProbe(t, Object.assign(Object.assign({}, e), {
-          [Pe]: parseInt(r.target.value)
+          [Be]: parseInt(r.target.value)
         }))}"
           >
             ${this.renderTheUpdateStatusWhenOptions(this.state_update_settings, e.probe_state_update_setting)}
@@ -3256,7 +3285,7 @@
                 @click="${e => this.handleRemoveProbe(e, t)}"
               >
                 <title>
-                  ${Vr("common.actions.delete", this.hass.language)}
+                  ${Xr("common.actions.delete", this.hass.language)}
                 </title>
                 <path fill="#404040" d="${"M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"}" />
               </svg>
@@ -3273,7 +3302,8 @@
         source: e.probe_source,
         source_type: e.probe_source_type,
         preset: e.probe_preset,
-        target_temp: e.probe_target_temperature
+        target_temp: e.probe_target_temperature,
+        input_number_entity: e.probe_input_number_entity
       })));
     }
     _renderProbesMemoized() {
@@ -3285,32 +3315,32 @@
     render() {
       return this.hass && this.config ? j`
         <ha-card
-          header="${Vr("panels.probes.title", this.hass.language)}"
+          header="${Xr("panels.probes.title", this.hass.language)}"
         >
           <div class="card-content">
-            ${Vr("panels.probes.description", this.hass.language)}
+            ${Xr("panels.probes.description", this.hass.language)}
           </div>
         </ha-card>
         <ha-card
-          header="${Vr("panels.probes.cards.add-probe.header", this.hass.language)}"
+          header="${Xr("panels.probes.cards.add-probe.header", this.hass.language)}"
         >
           <div class="card-content">
             <div class="probeline">
               <label for="nameInput"
-                >${Vr("panels.probes.labels.name", this.hass.language)}:</label
+                >${Xr("panels.probes.labels.name", this.hass.language)}:</label
               >
               <input id="nameInput" type="text" />
             </div>
             <div class="probeline">
               <label for="sourceInput"
-                >${Vr("panels.probes.labels.source", this.hass.language)}:</label
+                >${Xr("panels.probes.labels.source", this.hass.language)}:</label
               >
               <input id="sourceInput" type="text" />
             </div>
 
             <div class="probeline">
               <button @click="${this.handleAddProbe}">
-                ${Vr("panels.probes.cards.add-probe.actions.add", this.hass.language)}
+                ${Xr("panels.probes.cards.add-probe.actions.add", this.hass.language)}
               </button>
             </div>
           </div>
@@ -3320,7 +3350,7 @@
     }
     renderTheSourceOptions(e, t) {
       if (this.hass) {
-        let r = j`<option value="" ?selected=${void 0 === t}">---${Vr("common.labels.select", this.hass.language)}---</option>`;
+        let r = j`<option value="" ?selected=${void 0 === t}">---${Xr("common.labels.select", this.hass.language)}---</option>`;
         return Object.entries(e).map(([e, i]) => r = j`${r}
             <option
               value="${i.name}"
@@ -3332,8 +3362,8 @@
       return j``;
     }
     static get styles() {
-      return u`
-      ${Ve}
+      return c`
+      ${Xe}
       .probe {
         margin-top: 25px;
         margin-bottom: 25px;
@@ -3351,20 +3381,20 @@
     `;
     }
   };
-  s([me()], zr.prototype, "config", void 0), s([me({
+  s([me()], Wr.prototype, "config", void 0), s([me({
     type: Array
-  })], zr.prototype, "probes", void 0), s([me({
+  })], Wr.prototype, "probes", void 0), s([me({
     type: Array
-  })], zr.prototype, "presets", void 0), s([me({
+  })], Wr.prototype, "presets", void 0), s([me({
     type: Array
-  })], zr.prototype, "state_update_settings", void 0), s([me({
+  })], Wr.prototype, "state_update_settings", void 0), s([me({
     type: Array
-  })], zr.prototype, "sensors", void 0), s([be("#nameInput")], zr.prototype, "nameInput", void 0), s([be("#sourceInput")], zr.prototype, "sourceInput", void 0), zr = s([ue("grill-buddy-view-probes")], zr);
-  let Kr = null,
-    Xr = null;
-  const Wr = () => {
+  })], Wr.prototype, "sensors", void 0), s([be("#nameInput")], Wr.prototype, "nameInput", void 0), s([be("#sourceInput")], Wr.prototype, "sourceInput", void 0), Wr = s([ce("grill-buddy-view-probes")], Wr);
+  let Zr = null,
+    Yr = null;
+  const qr = () => {
     const e = window.location.pathname;
-    if (Xr === e && Kr) return Kr;
+    if (Yr === e && Zr) return Zr;
     const t = e => {
         const t = {};
         for (let r = 0; r < e.length; r += 2) {
@@ -3388,7 +3418,7 @@
       }
       e.length && (e.length % 2 && (i.subpage = e.shift()), e.length && (i.params = t(e)));
     }
-    return Kr = i, Xr = e, i;
+    return Zr = i, Yr = e, i;
   };
   e.GrillBuddyPanel = class extends he {
     constructor() {
@@ -3403,7 +3433,7 @@
     }
     render() {
       if (!this._haElementsLoaded) return j` <div>Loading Grill Buddy...</div> `;
-      const e = Wr();
+      const e = qr();
       return j`
       <div class="header">
         <div class="toolbar">
@@ -3411,7 +3441,7 @@
             .hass=${this.hass}
             .narrow=${this.narrow}
           ></ha-menu-button>
-          <div class="main-title">${Vr("title", this.hass.language)}</div>
+          <div class="main-title">${Xr("title", this.hass.language)}</div>
           <div class="version">${"v2025.7.0"}</div>
         </div>
 
@@ -3422,10 +3452,10 @@
           @sl-tab-show=${this.handlePageSelected}
         >
           <sl-tab slot="nav" panel="probes" .active=${"probes" === e.page}>
-            ${Vr("panels.probes.title", this.hass.language)}
+            ${Xr("panels.probes.title", this.hass.language)}
           </sl-tab>
           <sl-tab slot="nav" panel="help" .active=${"help" === e.page}
-            >${Vr("panels.help.title", this.hass.language)}</sl-tab
+            >${Xr("panels.help.title", this.hass.language)}</sl-tab
           >
         </sl-tab-group>
       </div>
@@ -3444,23 +3474,23 @@
         `;
         case "help":
           return j`<ha-card
-          header="${Vr("panels.help.cards.how-to-get-help.title", this.hass.language)}"
+          header="${Xr("panels.help.cards.how-to-get-help.title", this.hass.language)}"
         >
           <div class="card-content">
-            ${Vr("panels.help.cards.how-to-get-help.first-read-the", this.hass.language)}
+            ${Xr("panels.help.cards.how-to-get-help.first-read-the", this.hass.language)}
             <a href="https://github.com/jeroenterheerdt/grillbuddy/"
-              >${Vr("panels.help.cards.how-to-get-help.readme", this.hass.language)}</a
+              >${Xr("panels.help.cards.how-to-get-help.readme", this.hass.language)}</a
             >.
-            ${Vr("panels.help.cards.how-to-get-help.if-you-still-need-help", this.hass.language)}
+            ${Xr("panels.help.cards.how-to-get-help.if-you-still-need-help", this.hass.language)}
             <a
               href="https://community.home-assistant.io/t/grill-buddy-your-grilling-companion"
-              >${Vr("panels.help.cards.how-to-get-help.community-forum", this.hass.language)}</a
+              >${Xr("panels.help.cards.how-to-get-help.community-forum", this.hass.language)}</a
             >
-            ${Vr("panels.help.cards.how-to-get-help.or-open-a", this.hass.language)}
+            ${Xr("panels.help.cards.how-to-get-help.or-open-a", this.hass.language)}
             <a href="https://github.com/jeroenterheerdt/grillbuddy/issues"
-              >${Vr("panels.help.cards.how-to-get-help.github-issue", this.hass.language)}</a
+              >${Xr("panels.help.cards.how-to-get-help.github-issue", this.hass.language)}</a
             >
-            (${Vr("panels.help.cards.how-to-get-help.english-only", this.hass.language)}).
+            (${Xr("panels.help.cards.how-to-get-help.english-only", this.hass.language)}).
           </div></ha-card
         >`;
         default:
@@ -3476,7 +3506,7 @@
     }
     handlePageSelected(e) {
       const t = e.detail.name;
-      t !== Wr().page ? (!function (e, t, r) {
+      t !== qr().page ? (!function (e, t, r) {
         void 0 === r && (r = !1), r ? history.replaceState(null, "", t) : history.pushState(null, "", t), ve(window, "location-changed", {
           replace: r
         });
@@ -3508,8 +3538,8 @@
       })(t)), this.requestUpdate()) : scrollTo(0, 0);
     }
     static get styles() {
-      return u`
-      ${Ve} :host {
+      return c`
+      ${Xe} :host {
         color: var(--primary-text-color);
         --paper-card-header-color: var(--primary-text-color);
       }
@@ -3568,8 +3598,8 @@
   })], e.GrillBuddyPanel.prototype, "hass", void 0), s([me({
     type: Boolean,
     reflect: !0
-  })], e.GrillBuddyPanel.prototype, "narrow", void 0), e.GrillBuddyPanel = s([ue("grill-buddy")], e.GrillBuddyPanel);
-  let Zr = class extends he {
+  })], e.GrillBuddyPanel.prototype, "narrow", void 0), e.GrillBuddyPanel = s([ce("grill-buddy")], e.GrillBuddyPanel);
+  let Qr = class extends he {
     async showDialog(e) {
       this._params = e, await this.updateComplete;
     }
@@ -3610,7 +3640,7 @@
     ` : j``;
     }
     static get styles() {
-      return u`
+      return c`
       div.wrapper {
         color: var(--primary-text-color);
       }
@@ -3624,7 +3654,7 @@
   };
   s([me({
     attribute: !1
-  })], Zr.prototype, "hass", void 0), s([function (e) {
+  })], Qr.prototype, "hass", void 0), s([function (e) {
     return me({
       ...e,
       state: !0
@@ -3634,11 +3664,11 @@
        * @license
        * Copyright 2017 Google LLC
        * SPDX-License-Identifier: BSD-3-Clause
-       */()], Zr.prototype, "_params", void 0), Zr = s([ue("error-dialog")], Zr);
-  var Yr = Object.freeze({
+       */()], Qr.prototype, "_params", void 0), Qr = s([ce("error-dialog")], Qr);
+  var Jr = Object.freeze({
     __proto__: null,
     get ErrorDialog() {
-      return Zr;
+      return Qr;
     }
   });
   Object.defineProperty(e, "__esModule", {
