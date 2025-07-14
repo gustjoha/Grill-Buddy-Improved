@@ -13,7 +13,7 @@ let cachedPathname: string | null = null;
 
 export const getPath = () => {
   const currentPathname = window.location.pathname;
-  
+
   // Performance: Return cached result if pathname hasn't changed
   if (cachedPathname === currentPathname && cachedPath) {
     return cachedPath;
@@ -52,11 +52,11 @@ export const getPath = () => {
       if (extraArgs.length) path.params = pairsToDict(extraArgs);
     }
   }
-  
+
   // Performance: Cache the result
   cachedPath = path;
   cachedPathname = currentPathname;
-  
+
   return path;
 };
 
