@@ -29,9 +29,11 @@ import {
   PROBE_SOURCE_TYPE,
   PROBE_SOURCE_TYPE_PRESET,
   PROBE_SOURCE_TYPE_VALUE,
+  PROBE_SOURCE_TYPE_INPUT_NUMBER,
   PROBE_STATE_UPDATE_SETTING,
   PROBE_TARGET_TEMPERATURE,
   PROBE_UPPER_BOUND,
+  PROBE_INPUT_NUMBER_ENTITY,
 } from "../../const";
 import {
   localizeTemperatureUnit,
@@ -249,6 +251,9 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
       let r = html``;
       const sourcetypepreset =
         probe.probe_source_type === PROBE_SOURCE_TYPE_PRESET;
+      const sourcetypeinputnumber =
+        probe.probe_source_type === PROBE_SOURCE_TYPE_INPUT_NUMBER;
+      
       if (sourcetypepreset) {
         r = html`
           <div class="probeline">
@@ -270,6 +275,28 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
             >
               ${this.renderTheOptions(this.presets, probe.probe_preset)}
             </select>
+          </div>
+        `;
+      } else if (sourcetypeinputnumber) {
+        r = html`
+          <div class="probeline">
+            <label for="probe_input_number_entity${index}"
+              >${localize(
+                "panels.probes.labels.input_number_entity",
+                this.hass.language,
+              )}:</label
+            >
+            <input
+              type="text"
+              id="probe_input_number_entity${index}"
+              value="${probe.probe_input_number_entity || ''}"
+              placeholder="input_number.my_target_temp"
+              @input="${(e: Event) =>
+                this.handleEditProbe(index, {
+                  ...probe,
+                  [PROBE_INPUT_NUMBER_ENTITY]: (e.target as HTMLInputElement).value,
+                })}"
+            />
           </div>
         `;
       } else {
@@ -345,11 +372,17 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
               })}"/>
               <label for="probe_source_type_preset${index}">${localize("panels.probes.labels.sourcetypes.preset", this.hass.language)}</label>
               <input type="radio" id="probe_source_type_value${index}" value="${PROBE_SOURCE_TYPE_VALUE}" name="probe_source_type${index}"
-              ?checked="${!sourcetypepreset}" @change="${(e: Event) =>
+              ?checked="${probe.probe_source_type === PROBE_SOURCE_TYPE_VALUE}" @change="${(e: Event) =>
                 this.handleEditProbe(index, {
                   ...probe,
                   [PROBE_SOURCE_TYPE]: (e.target as HTMLInputElement).value,
                 })}"/><label for="probe_source_type_value${index}">${localize("panels.probes.labels.sourcetypes.value", this.hass.language)}</label>
+              <input type="radio" id="probe_source_type_input_number${index}" value="${PROBE_SOURCE_TYPE_INPUT_NUMBER}" name="probe_source_type${index}"
+              ?checked="${sourcetypeinputnumber}" @change="${(e: Event) =>
+                this.handleEditProbe(index, {
+                  ...probe,
+                  [PROBE_SOURCE_TYPE]: (e.target as HTMLInputElement).value,
+                })}"/><label for="probe_source_type_input_number${index}">${localize("panels.probes.labels.sourcetypes.input_number", this.hass.language)}</label>
             </div>${r}
             <div class="probeline">
       <label for="probe_lower_bound${index}">${localize(
@@ -422,7 +455,8 @@ class GrillBuddyViewProbes extends SubscribeMixin(LitElement) {
       source: p.probe_source,
       source_type: p.probe_source_type,
       preset: p.probe_preset,
-      target_temp: p.probe_target_temperature
+      target_temp: p.probe_target_temperature,
+      input_number_entity: p.probe_input_number_entity
     })));
   }
 

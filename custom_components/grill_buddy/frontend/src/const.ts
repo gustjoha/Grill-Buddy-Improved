@@ -16,7 +16,9 @@ export const PROBE_STATE_UPDATE_SETTING = "probe_state_update_setting";
 export const PROBE_SOURCE_TYPE = "probe_source_type";
 export const PROBE_SOURCE_TYPE_PRESET = "source_type_preset";
 export const PROBE_SOURCE_TYPE_VALUE = "source_type_value";
+export const PROBE_SOURCE_TYPE_INPUT_NUMBER = "source_type_input_number";
 export const PROBE_TARGET_TEMPERATURE = "probe_target_temperature"; //only set when not using a preset!
+export const PROBE_INPUT_NUMBER_ENTITY = "probe_input_number_entity";
 
 export const CONF_METRIC = "metric";
 export const UNIT_F = "°F";

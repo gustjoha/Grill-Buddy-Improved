@@ -21,9 +21,11 @@
         "sourcetype": "Zieltemperatur beziehen von",
         "sourcetypes": {
           "preset": "Voreinstellung",
-          "value": "Benutzerdefinierter Wert"
+          "value": "Benutzerdefinierter Wert",
+          "input_number": "Input Number Entität"
         },
-        "value": "Zieltemperatur"
+        "value": "Zieltemperatur",
+        "input_number_entity": "Input Number Entität"
       },
       "errors": {
         "invalid_source": "Ungültige Quelle",
