@@ -1,120 +1,64 @@
-Grill Buddy is your grilling companion, designed to simplify temperature monitoring during barbecues and cookouts. It seamlessly integrates with your Home Assistant enabled temperature sensors (probes) and supports various presets for proteins (such as beef, pork, and fish) and doneness levels (rare, medium, well-done and more). With Grill Buddy, you can set and monitor the following goals:
+# Grilling Improved — Home Assistant Addon
 
-- **Target Temperature**: Specify the desired temperature for your food.
-- **Temperature Range**: Monitor temperatures within specific value ranges.
-- **Out-of-Range Alerts**: Receive notifications when temperatures fall outside certain limits.
-- **Threshold Alerts**: Get notified when temperatures go below or above a specific value.
+A feature-rich BBQ temperature monitoring addon for Home Assistant with live charts, full cook history, ambient temperature tracking, and probe power management.
 
-Once your cooking goal is achieved, Grill Buddy updates the status to “goal reached.” Additionally, it provides detailed information about your thermometer probe’s status based on the chosen goal. Plus, it even predicts when you’ll reach your target temperature, allowing you to plan ahead! 🌡️🔥🍖
+## Features
 
-Remember to fire up the grill and enjoy your perfectly cooked meals! 🎉🔥
+- **Live temperature charts** — real-time Chart.js graphs fed via WebSocket
+- **Cook history** — full SQLite log of every temperature reading for every cook
+- **Ambient temperature** — configurable ambient sensor per probe, tracked alongside internal temp
+- **Probe enable switch** — optional toggle to power your probe (e.g. Inkbird enable switch)
+- **35 meat presets** — beef doneness, poultry, fish, smoking temps
+- **Auto-end cook** — configurable automatic session end after target temp is reached
+- **Multiple probes** — add as many probes as you like, each fully configurable
+- **HA Ingress** — works on desktop and mobile app with no token setup required
 
+## Installation
 
-## Configuration
-In this section:
-- [Installation](#step-1-installation)
-- [Configuration](#step-2-configuration)
-- [Usage](#step-3-usage)
-  
-### Step 1: Installation
-Install the custom integration (preferably using HACS: search for `Grill Buddy`). After downloading Grill Buddy from HACS, add the integration by searcing 'Grill Buddy' in your configuration and follow the prompts.
+1. In Home Assistant, go to **Settings → Add-ons → Add-on Store**
+2. Click the ⋮ menu → **Repositories** → add:
+   ```
+   https://github.com/gustjoha/grilling-improved-home-assistant
+   ```
+3. Find **Grilling Improved** in the store and click **Install**
+4. Start the addon and open the **Grilling** panel in your sidebar
 
-### Step 2: Configuration
-After the integration has been installed, you will find a new panel named 'Grill Buddy' in your side bar. Use it to configure your set up which includes setting up probes, their source sensors and the goals.
+## Probe Setup
 
-### Step 3: Usage
-After you set up your probes and have set goals, such as target temperature, you can build automations to do whatever you want with the information that Grill Buddy provides.
-For example, if you want to send yourself a notification when your goal has been reached you can use the following set up:
+When adding a probe you configure:
 
-```
-alias: Grill Buddy monitoring status for probe `test`
-description: ""
-trigger:
-  - platform: state
-    entity_id:
-      - sensor.grill_buddy_test
-    attribute: Status
-    from: goal_not_reached
-    to: goal_reached
-condition: []
-action: []
-mode: single
-```
+1. **Internal temperature sensor** — the entity reporting probe temperature (e.g. `sensor.terrace_inkbird_internal`)
+2. **Ambient temperature sensor** — optional outdoor/grill ambient temp (e.g. `sensor.terrace_inkbird_ambient`)
+3. **Enable switch** — optional switch to power your probe device (e.g. `switch.terrace_enable_inkbird_int_11p_b`)
+4. **Goal type** — at target, range, above/below threshold
+5. **Target temperature + preset** — choose from 35 presets or set manually
 
-You can of course also use the other attributes to do interesting things, such as sending a notification when there is 1 minute to go to reach your target:
-```
-alias: Grill Buddy trigger less than 1 minute to go for probe `test`
-description: ""
-trigger:
-  - platform: numeric_state
-    entity_id:
-      - sensor.grill_buddy_test
-    attribute: Time to target
-    below: 60
-condition: []
-action: []
-mode: single
-```
+## Starting a Cook
 
-Here's a more advanced automation that combines detailed goal status and time to target for multiple probes:
-```
-alias: Grill Buddy
-description: ""
-trigger:
-  - platform: state
-    entity_id:
-      - sensor.grill_buddy_probe_1
-      - sensor.grill_buddy_probe_2
-      - sensor.grill_buddy_probe_3
-      - sensor.grill_buddy_probe_4
-      - sensor.grill_buddy_probe_5
-      - sensor.grill_buddy_probe_6
-    attribute: Goal specific status
-    from: below_target_temperature
-    id: not_below_target
-  - platform: numeric_state
-    entity_id:
-      - sensor.grill_buddy_probe_1
-      - sensor.grill_buddy_probe_2
-      - sensor.grill_buddy_probe_3
-      - sensor.grill_buddy_probe_4
-      - sensor.grill_buddy_probe_5
-      - sensor.grill_buddy_probe_6
-    attribute: Time to target (s)
-    below: 60
-    id: time_to_target_below_60
-condition: []
-action:
-  - choose:
-      - conditions:
-          - condition: trigger
-            id:
-              - not_below_target
-        sequence:
-          - service: notify.my_phone
-            data:
-              title: Grill temperature on or above target!
-              message: >-
-                Source: {{trigger.entity_id}}, preset:
-                {{trigger.to_state.attributes.Preset}}
-      - conditions:
-          - condition: trigger
-            id:
-              - time_to_target_below_60
-        sequence:
-          - service: notify.my_phone
-            data:
-              title: Grill temperature almost reached!
-              message: "{{trigger.to_state.attributes.Preset}}"
-mode: single
+Click **Start Cook** on any probe card to begin a session. Each cook session:
 
-```
-## todo and wishlist
-- presets:
-  - hot smoke (52-80 C)
-  - cold smoke (20-30 C)
-  - bbq smoke (102-110 C)
-  - hamburger: 75C
-- steak timer (cut type/thickness)
-- timer handling per probe
-- which services do we need?
+- Records every temperature reading with timestamp
+- Tracks peak and minimum temperatures
+- Tracks ambient start/end temperatures
+- Detects goal reached and triggers auto-end timer
+- Can be manually ended at any time
+
+## Cook History
+
+The **Cook History** tab shows all past cook sessions with:
+- Full temperature chart (probe + ambient + target line)
+- Peak temp, duration, ambient start/end
+- Goal reached timestamp
+- Expandable per-session detail
+
+## Data Storage
+
+All data is stored in SQLite at `/data/grilling.db` inside the addon. This persists across addon restarts and HA reboots.
+
+## Architecture
+
+- **FastAPI** backend (Python 3.12)
+- **SQLite** via aiosqlite
+- **WebSocket** to HA for real-time state streaming
+- **Chart.js** for live and history charts
+- **HA Ingress** for seamless authentication
